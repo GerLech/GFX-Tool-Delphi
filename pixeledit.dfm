@@ -25,43 +25,43 @@ object PE: TPE
     OnPaint = pbPaint
   end
   object Label7: TLabel
-    Left = 552
-    Top = 53
+    Left = 556
+    Top = 45
     Width = 30
     Height = 15
     Caption = 'Breite'
   end
   object Label1: TLabel
-    Left = 552
-    Top = 82
+    Left = 556
+    Top = 74
     Width = 29
     Height = 15
     Caption = 'H'#246'he'
   end
   object Label2: TLabel
-    Left = 552
-    Top = 111
+    Left = 556
+    Top = 103
     Width = 72
     Height = 15
     Caption = 'Zeichenbreite'
   end
   object Label3: TLabel
-    Left = 552
-    Top = 140
+    Left = 556
+    Top = 132
     Width = 48
     Height = 15
     Caption = 'X-Versatz'
   end
   object Label4: TLabel
-    Left = 552
-    Top = 169
+    Left = 556
+    Top = 161
     Width = 48
     Height = 15
     Caption = 'Y-Versatz'
   end
   object le: TPaintBox
-    Left = 681
-    Top = 352
+    Left = 672
+    Top = 344
     Width = 50
     Height = 50
     Color = clWhite
@@ -69,8 +69,8 @@ object PE: TPE
     OnPaint = lePaint
   end
   object mvleft: TSpeedButton
-    Left = 591
-    Top = 283
+    Left = 595
+    Top = 275
     Width = 23
     Height = 22
     Cursor = crHandPoint
@@ -82,8 +82,8 @@ object PE: TPE
     OnClick = moveClick
   end
   object mvup: TSpeedButton
-    Left = 620
-    Top = 259
+    Left = 624
+    Top = 251
     Width = 23
     Height = 22
     Cursor = crHandPoint
@@ -95,8 +95,8 @@ object PE: TPE
     OnClick = moveClick
   end
   object mvright: TSpeedButton
-    Left = 649
-    Top = 283
+    Left = 653
+    Top = 275
     Width = 23
     Height = 22
     Cursor = crHandPoint
@@ -108,8 +108,8 @@ object PE: TPE
     OnClick = moveClick
   end
   object mvdown: TSpeedButton
-    Left = 620
-    Top = 311
+    Left = 624
+    Top = 303
     Width = 23
     Height = 22
     Cursor = crHandPoint
@@ -121,25 +121,32 @@ object PE: TPE
     OnClick = moveClick
   end
   object lix: TLabel
-    Left = 555
-    Top = 24
+    Left = 559
+    Top = 16
     Width = 29
     Height = 15
     Caption = 'Index'
   end
   object Label5: TLabel
-    Left = 552
-    Top = 198
+    Left = 556
+    Top = 190
     Width = 55
     Height = 15
     Caption = 'Hilfslinie 1'
   end
   object Label6: TLabel
-    Left = 552
-    Top = 228
+    Left = 556
+    Top = 220
     Width = 55
     Height = 15
     Caption = 'Hilfslinie 2'
+  end
+  object Label8: TLabel
+    Left = 539
+    Top = 434
+    Width = 63
+    Height = 15
+    Caption = 'Schwellwert'
   end
   object Button1: TButton
     Left = 552
@@ -160,8 +167,8 @@ object PE: TPE
     TabOrder = 1
   end
   object nbw: TNumberBox
-    Left = 633
-    Top = 49
+    Left = 637
+    Top = 41
     Width = 65
     Height = 23
     MaxValue = 50.000000000000000000
@@ -171,8 +178,8 @@ object PE: TPE
     OnChangeValue = nbwChangeValue
   end
   object nbh: TNumberBox
-    Left = 633
-    Top = 78
+    Left = 637
+    Top = 70
     Width = 65
     Height = 23
     MaxValue = 50.000000000000000000
@@ -182,8 +189,8 @@ object PE: TPE
     OnChangeValue = nbhChangeValue
   end
   object nbadv: TNumberBox
-    Left = 633
-    Top = 107
+    Left = 637
+    Top = 99
     Width = 65
     Height = 23
     MinValue = 3.000000000000000000
@@ -194,8 +201,8 @@ object PE: TPE
     OnChangeValue = nbadvChangeValue
   end
   object nbxo: TNumberBox
-    Left = 633
-    Top = 135
+    Left = 637
+    Top = 127
     Width = 65
     Height = 23
     MinValue = -5.000000000000000000
@@ -205,8 +212,8 @@ object PE: TPE
     OnChangeValue = nbxoChangeValue
   end
   object nbyo: TNumberBox
-    Left = 633
-    Top = 164
+    Left = 637
+    Top = 156
     Width = 65
     Height = 23
     MinValue = -50.000000000000000000
@@ -216,7 +223,7 @@ object PE: TPE
   end
   object Letter: TEdit
     Left = 698
-    Top = 424
+    Top = 431
     Width = 33
     Height = 23
     MaxLength = 1
@@ -224,8 +231,8 @@ object PE: TPE
     OnChange = LetterChange
   end
   object Button3: TButton
-    Left = 568
-    Top = 352
+    Left = 656
+    Top = 400
     Width = 75
     Height = 25
     Caption = #220'bernehmen'
@@ -233,8 +240,8 @@ object PE: TPE
     OnClick = Button3Click
   end
   object Button4: TButton
-    Left = 568
-    Top = 383
+    Left = 555
+    Top = 360
     Width = 75
     Height = 25
     Caption = 'Font'
@@ -242,9 +249,9 @@ object PE: TPE
     OnClick = Button4Click
   end
   object sw: TNumberBox
-    Left = 568
-    Top = 424
-    Width = 75
+    Left = 608
+    Top = 431
+    Width = 68
     Height = 23
     MaxValue = 255.000000000000000000
     TabOrder = 10
@@ -253,8 +260,8 @@ object PE: TPE
     OnChangeValue = nbyoChangeValue
   end
   object nix: TEdit
-    Left = 633
-    Top = 21
+    Left = 637
+    Top = 13
     Width = 40
     Height = 23
     TabOrder = 11
@@ -262,8 +269,8 @@ object PE: TPE
     OnKeyPress = nixKeyPress
   end
   object HL1: TNumberBox
-    Left = 633
-    Top = 193
+    Left = 637
+    Top = 185
     Width = 65
     Height = 23
     MaxValue = 50.000000000000000000
@@ -273,8 +280,8 @@ object PE: TPE
     OnChangeValue = HL1ChangeValue
   end
   object HL2: TNumberBox
-    Left = 633
-    Top = 222
+    Left = 637
+    Top = 214
     Width = 65
     Height = 23
     MaxValue = 50.000000000000000000

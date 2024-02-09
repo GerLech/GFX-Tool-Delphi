@@ -50,6 +50,7 @@ type
     Label6: TLabel;
     HL1: TNumberBox;
     HL2: TNumberBox;
+    Label8: TLabel;
     procedure pbPaint(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure nbxoChangeValue(Sender: TObject);

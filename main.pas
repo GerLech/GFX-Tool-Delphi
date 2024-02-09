@@ -14,7 +14,6 @@ type
     pictures: TTabSheet;
     img: TImage;
     Label2: TLabel;
-    img1: TImage;
     LoadImg: TButton;
     ConvertImg: TButton;
     res: TMemo;
@@ -51,6 +50,10 @@ type
     Label6: TLabel;
     lineheight: TNumberBox;
     newfont: TButton;
+    Button1: TButton;
+    Panel4: TPanel;
+    Panel5: TPanel;
+    img1: TImage;
     procedure LoadImgClick(Sender: TObject);
     procedure ConvertImgClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -63,6 +66,7 @@ type
       WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
     procedure SavFontClick(Sender: TObject);
     procedure newfontClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
   private
     { Private-Deklarationen }
     imgPath: string;
@@ -117,8 +121,11 @@ begin
     begin
       { If it exists, load the data into the image component. }
       img.Picture.LoadFromFile(od.FileName);
+      img1.Canvas.Brush.Color := clWhite;
+      img1.Canvas.FillRect(img1.Canvas.ClipRect);
       e_name.Text := TPath.GetFileNameWithoutExtension(od.FileName);
-      writeToIni('ImgPath',TPath.GetFullPath(od.FileName));
+      writeToIni('ImgPath',TPath.GetDirectoryName(od.FileName));
+      res.Lines.Clear;
     end
   else
     begin
@@ -145,8 +152,9 @@ begin
     bmp.PixelFormat := pf32bit;
     bmp.Width := img.Picture.Width;
     bmp.Height := img.Picture.Height;
-    bmp.Transparent := true;
+    bmp.Transparent := false;
     bmp.Canvas.Draw(0, 0, img.Picture.Graphic,128);
+    //img1.Canvas.Draw(0, 0, img.Picture.Graphic,128);
     n := num.ValueInt;
     if vert.Checked then
       begin
@@ -201,12 +209,17 @@ begin
   begin
     sd.InitialDir := imgSavePath;
     sd.DefaultExt := 'h';
-    sd.FileName := e_namef.Text;
+    sd.Filter := 'Image header|*.h';
+    sd.FileName := e_name.Text + '.h';
     if sd.Execute then
     begin
-      res.Lines.SaveToFile(sd.FileName);
-      writeToIni('ImgSavePath',TPath.GetFullPath(sd.FileName));
+        res.Lines.SaveToFile(sd.FileName);
+        writeToIni('ImgSavePath',TPath.GetDirectoryName(sd.FileName));
     end;
+  end
+  else
+  begin
+    MessageDlg('Bild zuerst umwandeln!',mtError, [mbOK], 0);
   end;
 end;
 
@@ -216,12 +229,17 @@ begin
   begin
     sdf.InitialDir := fontSavePath;
     sdf.DefaultExt := 'h';
-    sdf.FileName := e_name.Text;
+    sdf.Filter := 'Font header|*.h';
+    sdf.FileName := e_namef.Text + '.h';
     if sdf.Execute then
     begin
-      SaveFont(sdf.FileName);
-      writeToIni('FontSavePath',TPath.GetFullPath(sdf.FileName));
+        SaveFont(sdf.FileName);
+        writeToIni('FontSavePath',TPath.GetDirectoryName(sdf.FileName));
     end;
+  end
+  else
+  begin
+    MessageDlg('Der Font braucht einen Namen!',mtError, [mbOK], 0);
   end;
 end;
 
@@ -660,6 +678,12 @@ for i := 0 to 255 do
   end;   }
 end;
 
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+  clearGlyphs;
+  gllist.Repaint;
+end;
+
 procedure TForm1.clearGlyphs;
 var i :integer;
     r: TGlyph;
@@ -667,6 +691,8 @@ begin
   r.offset:=0; r.w:=0; r.h := 0; r.adv := round(fbaseline * 0.7); r.xo := 0; r.yo := 0;
   for i := 0 to 255 do  gls[i] := r;
   maxwidth := r.adv;
+  bmsize := 0;
+  newFontClick(self);
 end;
 
 procedure TForm1.drawGlyph(index: Integer);

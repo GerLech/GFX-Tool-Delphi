@@ -3,7 +3,7 @@ object Form1: TForm1
   Top = 0
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
-  Caption = 'Bild Koverter f'#252'r TFT-Display'
+  Caption = 'GFX -Tool'
   ClientHeight = 730
   ClientWidth = 1058
   Color = clBtnFace
@@ -26,31 +26,20 @@ object Form1: TForm1
     Top = 0
     Width = 1058
     Height = 730
-    ActivePage = fonts
+    ActivePage = pictures
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 1054
-    ExplicitHeight = 729
     object pictures: TTabSheet
       Caption = 'Bilder'
-      object img: TImage
-        Left = 11
-        Top = 105
-        Width = 318
-        Height = 272
-      end
+      DesignSize = (
+        1050
+        700)
       object Label2: TLabel
         Left = 737
         Top = 60
         Width = 35
         Height = 15
         Caption = 'Name:'
-      end
-      object img1: TImage
-        Left = 8
-        Top = 408
-        Width = 321
-        Height = 275
       end
       object LoadImg: TButton
         Left = 24
@@ -71,12 +60,13 @@ object Form1: TForm1
         OnClick = ConvertImgClick
       end
       object res: TMemo
-        Left = 372
-        Top = 105
-        Width = 629
-        Height = 577
+        Left = 56
+        Top = 408
+        Width = 951
+        Height = 122
         ScrollBars = ssBoth
         TabOrder = 2
+        Visible = False
       end
       object e_name: TEdit
         Left = 783
@@ -203,6 +193,52 @@ object Form1: TForm1
           TabStop = True
         end
       end
+      object Panel4: TPanel
+        Left = 13
+        Top = 115
+        Width = 500
+        Height = 500
+        Caption = 'Original Bild'
+        Color = clGradientInactiveCaption
+        ParentBackground = False
+        TabOrder = 8
+        VerticalAlignment = taAlignTop
+        object img: TImage
+          AlignWithMargins = True
+          Left = 0
+          Top = 28
+          Width = 500
+          Height = 472
+          AutoSize = True
+          Center = True
+        end
+      end
+      object Panel5: TPanel
+        Left = 538
+        Top = 115
+        Width = 500
+        Height = 500
+        Margins.Right = 0
+        Margins.Bottom = 0
+        Anchors = []
+        BevelEdges = []
+        BevelOuter = bvNone
+        BorderWidth = 2
+        BorderStyle = bsSingle
+        Caption = 'Umgewandeltes Bild'
+        Color = clWhite
+        ParentBackground = False
+        TabOrder = 9
+        VerticalAlignment = taAlignTop
+        object img1: TImage
+          Left = 1
+          Top = 28
+          Width = 492
+          Height = 468
+          Center = True
+          Transparent = True
+        end
+      end
     end
     object fonts: TTabSheet
       Caption = 'Schriften'
@@ -283,7 +319,7 @@ object Form1: TForm1
       end
       object SavFont: TButton
         Left = 856
-        Top = 104
+        Top = 64
         Width = 169
         Height = 25
         Caption = 'Font speichern'
@@ -302,25 +338,34 @@ object Form1: TForm1
       end
       object newfont: TButton
         Left = 856
-        Top = 64
+        Top = 344
         Width = 169
         Height = 25
-        Caption = 'Neuer Font'
+        Caption = 'Werte '#252'bernehmen'
         TabOrder = 6
         OnClick = newfontClick
       end
+      object Button1: TButton
+        Left = 856
+        Top = 384
+        Width = 169
+        Height = 25
+        Caption = 'Alle Zeichen l'#246'schen'
+        TabOrder = 7
+        OnClick = Button1Click
+      end
+      object fontheight: TNumberBox
+        Left = 960
+        Top = 221
+        Width = 65
+        Height = 23
+        MinValue = 10.000000000000000000
+        MaxValue = 50.000000000000000000
+        TabOrder = 8
+        Value = 42.000000000000000000
+        SpinButtonOptions.Placement = nbspInline
+      end
     end
-  end
-  object fontheight: TNumberBox
-    Left = 964
-    Top = 247
-    Width = 65
-    Height = 23
-    MinValue = 10.000000000000000000
-    MaxValue = 50.000000000000000000
-    TabOrder = 1
-    Value = 42.000000000000000000
-    SpinButtonOptions.Placement = nbspInline
   end
   object od: TOpenPictureDialog
     InitialDir = 'C:\Projekte\Arduino\AZ-Delivery\tft-bilder-anzeigen'
@@ -340,6 +385,7 @@ object Form1: TForm1
     Top = 610
   end
   object sdf: TSaveDialog
+    Options = [ofOverwritePrompt, ofHideReadOnly, ofEnableSizing]
     Left = 156
     Top = 610
   end
