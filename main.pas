@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtDlgs, Vcl.ExtCtrls, vcl.Imaging.pnglang,
   Vcl.Imaging.jpeg, Vcl.Imaging.pngimage, vcl.NumberBox, System.IOUtils, System.IniFiles,
-  Vcl.ComCtrls,pixeledit, System.Types;
+  Vcl.ComCtrls,pixeledit, System.Types, languageIni;
 
 type
   TForm1 = class(TForm)
@@ -40,7 +40,6 @@ type
     Label4: TLabel;
     gllist: TPaintBox;
     ScrollBox1: TScrollBox;
-    Label8: TLabel;
     Label7: TLabel;
     baseline: TNumberBox;
     Label5: TLabel;
@@ -54,6 +53,8 @@ type
     Panel4: TPanel;
     Panel5: TPanel;
     img1: TImage;
+    language: TComboBox;
+    Label8: TLabel;
     procedure LoadImgClick(Sender: TObject);
     procedure ConvertImgClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -67,6 +68,8 @@ type
     procedure SavFontClick(Sender: TObject);
     procedure newfontClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure languageChange(Sender: TObject);
+    procedure languageDblClick(Sender: TObject);
   private
     { Private-Deklarationen }
     imgPath: string;
@@ -102,9 +105,10 @@ type
     procedure clearGlyphs;
     function SaveFont(filename : string):Boolean;
     procedure WriteToIni(key:string; value : string);
+    procedure WriteToIniInt(key:string; value : integer);
   public
     { Public-Deklarationen }
-  end;
+end;
 
 var
   Form1: TForm1;
@@ -316,6 +320,7 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 var ini: TIniFile;
   filename: String;
+  lng : integer;
 begin
   filename := ExtractFilePath(ParamStr(0)) + 'config.ini'; //???
   ini := TIniFile.Create(filename);
@@ -324,11 +329,23 @@ begin
     ImgSavePath := Ini.ReadString('Config', 'ImgSavePath', TPath.GetPicturesPath());
     fontPath := Ini.ReadString('Config', 'FontPath', TPath.GetDocumentsPath());
     fontSavePath := Ini.ReadString('Config', 'FontSavePath', TPath.GetDocumentsPath());
+    lng := Ini.ReadInteger('Config','Language',0);
     newFontClick(self);
   finally
     ini.Free;
   end;
   clearGlyphs;
+  language.Items.Clear;
+  TLangIni.GetLanguages(language.Items);
+  if language.Items.Count > lng then
+  begin
+    language.ItemIndex := lng;
+    TLangIni.ReadLanguage(self,'Main',language.Text);
+  end
+  else
+  begin
+     language.ItemIndex := -1;
+  end;
 end;
 
 
@@ -473,6 +490,23 @@ function TForm1.GrayToColor(col: Byte): TColor;
 begin
   Result := RGB(col,col,col);
 end;
+
+procedure TForm1.languageChange(Sender: TObject);
+begin
+  tlangini.ReadLanguage(self,'Main',language.Text);
+  TLangIni.ReadLanguage(PE,'PE',language.Text);
+  writeToIniInt('Language',language.ItemIndex)
+end;
+
+procedure TForm1.languageDblClick(Sender: TObject);
+var l : string;
+begin
+  if language.ItemIndex < 0 then l:= '1GE' else l := language.Text;
+  tLangIni.buildIni(self,'Main',l);
+  tLangIni.buildIni(PE,'PE',l);
+  MessageDlg('Ini file created', mtInformation,[mbOK],0);
+end;
+
 
 procedure TForm1.loadFont(fn: string);
 var fs : TStreamReader;
@@ -856,5 +890,18 @@ begin
         ini.Free;
       end;
 end;
+procedure TForm1.WriteToIniInt(key: string; value: integer);
+var filename : string;
+    ini: TIniFile;
+begin
+      filename := ExtractFilePath(ParamStr(0)) + 'config.ini';
+      ini := TIniFile.Create(filename);
+      try
+        Ini.WriteInteger('Config', key, value);
+      finally
+        ini.Free;
+      end;
+end;
+
 
 end.

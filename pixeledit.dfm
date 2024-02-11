@@ -4,8 +4,8 @@ object PE: TPE
   BorderIcons = []
   BorderStyle = bsDialog
   Caption = 'Pixel Editor'
-  ClientHeight = 521
-  ClientWidth = 758
+  ClientHeight = 530
+  ClientWidth = 866
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,6 +15,9 @@ object PE: TPE
   FormStyle = fsStayOnTop
   OnCreate = FormCreate
   OnShow = FormShow
+  DesignSize = (
+    866
+    530)
   TextHeight = 15
   object pb: TPaintBox
     Left = 8
@@ -25,52 +28,58 @@ object PE: TPE
     OnPaint = pbPaint
   end
   object Label7: TLabel
-    Left = 556
-    Top = 45
+    Left = 589
+    Top = 55
     Width = 30
     Height = 15
+    Alignment = taRightJustify
+    Anchors = [akTop, akRight]
     Caption = 'Breite'
+    ExplicitLeft = 588
   end
   object Label1: TLabel
-    Left = 556
-    Top = 74
+    Left = 735
+    Top = 56
     Width = 29
     Height = 15
+    Alignment = taRightJustify
+    Anchors = [akTop, akRight]
     Caption = 'H'#246'he'
+    ExplicitLeft = 734
   end
   object Label2: TLabel
-    Left = 556
-    Top = 103
+    Left = 547
+    Top = 92
     Width = 72
     Height = 15
+    Alignment = taRightJustify
+    Anchors = [akTop, akRight]
     Caption = 'Zeichenbreite'
+    ExplicitLeft = 546
   end
   object Label3: TLabel
-    Left = 556
-    Top = 132
+    Left = 716
+    Top = 131
     Width = 48
     Height = 15
+    Alignment = taRightJustify
+    Anchors = [akTop, akRight]
     Caption = 'X-Versatz'
+    ExplicitLeft = 715
   end
   object Label4: TLabel
-    Left = 556
-    Top = 161
+    Left = 571
+    Top = 130
     Width = 48
     Height = 15
+    Alignment = taRightJustify
+    Anchors = [akTop, akRight]
     Caption = 'Y-Versatz'
-  end
-  object le: TPaintBox
-    Left = 672
-    Top = 344
-    Width = 50
-    Height = 50
-    Color = clWhite
-    ParentColor = False
-    OnPaint = lePaint
+    ExplicitLeft = 570
   end
   object mvleft: TSpeedButton
-    Left = 595
-    Top = 275
+    Left = 650
+    Top = 235
     Width = 23
     Height = 22
     Cursor = crHandPoint
@@ -82,8 +91,8 @@ object PE: TPE
     OnClick = moveClick
   end
   object mvup: TSpeedButton
-    Left = 624
-    Top = 251
+    Left = 679
+    Top = 211
     Width = 23
     Height = 22
     Cursor = crHandPoint
@@ -95,8 +104,8 @@ object PE: TPE
     OnClick = moveClick
   end
   object mvright: TSpeedButton
-    Left = 653
-    Top = 275
+    Left = 708
+    Top = 235
     Width = 23
     Height = 22
     Cursor = crHandPoint
@@ -108,8 +117,8 @@ object PE: TPE
     OnClick = moveClick
   end
   object mvdown: TSpeedButton
-    Left = 624
-    Top = 303
+    Left = 679
+    Top = 263
     Width = 23
     Height = 22
     Cursor = crHandPoint
@@ -121,54 +130,56 @@ object PE: TPE
     OnClick = moveClick
   end
   object lix: TLabel
-    Left = 559
-    Top = 16
-    Width = 29
+    Left = 546
+    Top = 23
+    Width = 73
     Height = 15
-    Caption = 'Index'
+    Alignment = taRightJustify
+    Anchors = [akTop, akRight]
+    Caption = 'Zeichen Code'
+    ExplicitLeft = 545
   end
   object Label5: TLabel
-    Left = 556
-    Top = 190
+    Left = 564
+    Top = 168
     Width = 55
     Height = 15
+    Alignment = taRightJustify
+    Anchors = [akTop, akRight]
     Caption = 'Hilfslinie 1'
+    ExplicitLeft = 563
   end
   object Label6: TLabel
-    Left = 556
-    Top = 220
+    Left = 709
+    Top = 169
     Width = 55
     Height = 15
+    Alignment = taRightJustify
+    Anchors = [akTop, akRight]
     Caption = 'Hilfslinie 2'
-  end
-  object Label8: TLabel
-    Left = 539
-    Top = 434
-    Width = 63
-    Height = 15
-    Caption = 'Schwellwert'
+    ExplicitLeft = 708
   end
   object Button1: TButton
-    Left = 552
-    Top = 480
-    Width = 75
+    Left = 539
+    Top = 488
+    Width = 110
     Height = 25
     Caption = 'Speichern'
     ModalResult = 1
     TabOrder = 0
   end
   object Button2: TButton
-    Left = 656
-    Top = 480
-    Width = 75
+    Left = 727
+    Top = 488
+    Width = 107
     Height = 25
     Caption = 'Abbrechen'
     ModalResult = 2
     TabOrder = 1
   end
   object nbw: TNumberBox
-    Left = 637
-    Top = 41
+    Left = 624
+    Top = 52
     Width = 65
     Height = 23
     MaxValue = 50.000000000000000000
@@ -178,8 +189,8 @@ object PE: TPE
     OnChangeValue = nbwChangeValue
   end
   object nbh: TNumberBox
-    Left = 637
-    Top = 70
+    Left = 769
+    Top = 52
     Width = 65
     Height = 23
     MaxValue = 50.000000000000000000
@@ -189,8 +200,8 @@ object PE: TPE
     OnChangeValue = nbhChangeValue
   end
   object nbadv: TNumberBox
-    Left = 637
-    Top = 99
+    Left = 624
+    Top = 89
     Width = 65
     Height = 23
     MinValue = 3.000000000000000000
@@ -201,7 +212,7 @@ object PE: TPE
     OnChangeValue = nbadvChangeValue
   end
   object nbxo: TNumberBox
-    Left = 637
+    Left = 624
     Top = 127
     Width = 65
     Height = 23
@@ -212,8 +223,8 @@ object PE: TPE
     OnChangeValue = nbxoChangeValue
   end
   object nbyo: TNumberBox
-    Left = 637
-    Top = 156
+    Left = 769
+    Top = 127
     Width = 65
     Height = 23
     MinValue = -50.000000000000000000
@@ -221,74 +232,106 @@ object PE: TPE
     SpinButtonOptions.Placement = nbspInline
     OnChangeValue = nbyoChangeValue
   end
-  object Letter: TEdit
-    Left = 698
-    Top = 431
-    Width = 33
-    Height = 23
-    MaxLength = 1
-    TabOrder = 7
-    OnChange = LetterChange
-  end
-  object Button3: TButton
-    Left = 656
-    Top = 400
-    Width = 75
-    Height = 25
-    Caption = #220'bernehmen'
-    TabOrder = 8
-    OnClick = Button3Click
-  end
-  object Button4: TButton
-    Left = 555
-    Top = 360
-    Width = 75
-    Height = 25
-    Caption = 'Font'
-    TabOrder = 9
-    OnClick = Button4Click
-  end
-  object sw: TNumberBox
-    Left = 608
-    Top = 431
-    Width = 68
-    Height = 23
-    MaxValue = 255.000000000000000000
-    TabOrder = 10
-    Value = 130.000000000000000000
-    SpinButtonOptions.Placement = nbspInline
-    OnChangeValue = nbyoChangeValue
-  end
   object nix: TEdit
-    Left = 637
-    Top = 13
+    Left = 649
+    Top = 16
     Width = 40
     Height = 23
-    TabOrder = 11
+    TabOrder = 7
     OnChange = nixChange
     OnKeyPress = nixKeyPress
   end
   object HL1: TNumberBox
-    Left = 637
-    Top = 185
+    Left = 624
+    Top = 165
     Width = 65
     Height = 23
     MaxValue = 50.000000000000000000
-    TabOrder = 12
+    TabOrder = 8
     Value = 3.000000000000000000
     SpinButtonOptions.Placement = nbspInline
     OnChangeValue = HL1ChangeValue
   end
   object HL2: TNumberBox
-    Left = 637
-    Top = 214
+    Left = 769
+    Top = 165
     Width = 65
     Height = 23
     MaxValue = 50.000000000000000000
-    TabOrder = 13
+    TabOrder = 9
     Value = 15.000000000000000000
     SpinButtonOptions.Placement = nbspInline
     OnChangeValue = HL1ChangeValue
+  end
+  object Panel1: TPanel
+    Left = 539
+    Top = 307
+    Width = 295
+    Height = 158
+    Caption = 'Zeichen aus Font '#252'bernehmen'
+    TabOrder = 10
+    VerticalAlignment = taAlignTop
+    object le: TPaintBox
+      Left = 223
+      Top = 32
+      Width = 50
+      Height = 50
+      Color = clWhite
+      ParentColor = False
+      OnPaint = lePaint
+    end
+    object Label8: TLabel
+      Left = 66
+      Top = 88
+      Width = 63
+      Height = 19
+      Caption = 'Schwellwert'
+    end
+    object Label9: TLabel
+      Left = 112
+      Top = 56
+      Width = 42
+      Height = 15
+      Caption = 'Zeichen'
+    end
+    object Button3: TButton
+      Left = 87
+      Top = 121
+      Width = 146
+      Height = 25
+      Caption = #220'bernehmen'
+      TabOrder = 0
+      OnClick = Button3Click
+    end
+    object Button4: TButton
+      Left = 63
+      Top = 25
+      Width = 138
+      Height = 25
+      Caption = 'Font'
+      TabOrder = 1
+      OnClick = Button4Click
+    end
+    object sw: TNumberBox
+      Left = 135
+      Top = 83
+      Width = 68
+      Height = 23
+      MaxValue = 255.000000000000000000
+      TabOrder = 2
+      Value = 175.000000000000000000
+      SpinButtonOptions.Placement = nbspInline
+      OnChangeValue = nbyoChangeValue
+    end
+    object Letter: TEdit
+      Left = 160
+      Top = 53
+      Width = 33
+      Height = 23
+      MaxLength = 1
+      TabOrder = 3
+      OnChange = LetterChange
+    end
   end
   object FD: TFontDialog
     Font.Charset = DEFAULT_CHARSET

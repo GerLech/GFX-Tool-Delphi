@@ -3,7 +3,8 @@ program GFXTool;
 uses
   Vcl.Forms,
   main in 'main.pas' {Form1},
-  pixeledit in 'pixeledit.pas' {PE};
+  pixeledit in 'pixeledit.pas' {PE},
+  LanguageIni in 'LanguageIni.pas';
 
 {$R *.res}
 

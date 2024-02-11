@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,
-  Vcl.NumberBox, System.ImageList, Vcl.ImgList, Vcl.Buttons, Vcl.Mask;
+  Vcl.NumberBox, System.ImageList, Vcl.ImgList, Vcl.Buttons, Vcl.Mask, LanguageIni ;
 
 type
   TGlyph = record
@@ -51,6 +51,8 @@ type
     HL1: TNumberBox;
     HL2: TNumberBox;
     Label8: TLabel;
+    Panel1: TPanel;
+    Label9: TLabel;
     procedure pbPaint(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure nbxoChangeValue(Sender: TObject);
@@ -104,6 +106,8 @@ var
   PE: TPE;
 
 implementation
+
+uses main;
 
 {$R *.dfm}
 procedure TPE.pbMouseDown(Sender: TObject; Button: TMouseButton;
@@ -309,6 +313,7 @@ end;
 procedure TPE.FormCreate(Sender: TObject);
 begin
   Ready := 0;
+  TLangIni.ReadLanguage(self,'PE', Form1.language.Text);
 end;
 
 procedure TPE.FormShow(Sender: TObject);

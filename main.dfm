@@ -15,11 +15,13 @@ object Form1: TForm1
   OnCreate = FormCreate
   TextHeight = 15
   object Label8: TLabel
-    Left = 790
-    Top = 277
-    Width = 63
+    Left = 946
+    Top = 4
+    Width = 42
     Height = 15
-    Caption = 'Schwellwert'
+    Alignment = taRightJustify
+    Caption = 'Sprache'
+    OnDblClick = languageDblClick
   end
   object PageControl1: TPageControl
     Left = 0
@@ -29,6 +31,8 @@ object Form1: TForm1
     ActivePage = pictures
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 1054
+    ExplicitHeight = 729
     object pictures: TTabSheet
       Caption = 'Bilder'
       DesignSize = (
@@ -46,24 +50,24 @@ object Form1: TForm1
         Top = 8
         Width = 161
         Height = 25
-        Caption = 'File '#246'ffnen'
+        Caption = 'Bild laden'
         TabOrder = 0
         OnClick = LoadImgClick
       end
       object ConvertImg: TButton
-        Left = 835
+        Left = 782
         Top = 8
-        Width = 75
+        Width = 207
         Height = 25
-        Caption = 'Umwandeln'
+        Caption = 'Bild umwandeln'
         TabOrder = 1
         OnClick = ConvertImgClick
       end
       object res: TMemo
         Left = 56
-        Top = 408
+        Top = 113
         Width = 951
-        Height = 122
+        Height = 569
         ScrollBars = ssBoth
         TabOrder = 2
         Visible = False
@@ -80,7 +84,7 @@ object Form1: TForm1
         Top = 64
         Width = 161
         Height = 25
-        Caption = 'File speichern'
+        Caption = 'Bild speichern'
         TabOrder = 4
         OnClick = SaveImgClick
       end
@@ -197,7 +201,7 @@ object Form1: TForm1
         Left = 13
         Top = 115
         Width = 500
-        Height = 500
+        Height = 566
         Caption = 'Original Bild'
         Color = clGradientInactiveCaption
         ParentBackground = False
@@ -206,18 +210,20 @@ object Form1: TForm1
         object img: TImage
           AlignWithMargins = True
           Left = 0
-          Top = 28
+          Top = 27
           Width = 500
-          Height = 472
+          Height = 534
           AutoSize = True
           Center = True
+          Proportional = True
+          Stretch = True
         end
       end
       object Panel5: TPanel
-        Left = 538
-        Top = 115
+        Left = 536
+        Top = 113
         Width = 500
-        Height = 500
+        Height = 568
         Margins.Right = 0
         Margins.Bottom = 0
         Anchors = []
@@ -227,15 +233,21 @@ object Form1: TForm1
         BorderStyle = bsSingle
         Caption = 'Umgewandeltes Bild'
         Color = clWhite
+        Ctl3D = False
         ParentBackground = False
+        ParentCtl3D = False
         TabOrder = 9
         VerticalAlignment = taAlignTop
+        ExplicitLeft = 533
+        ExplicitTop = 112
         object img1: TImage
           Left = 1
           Top = 28
           Width = 492
-          Height = 468
+          Height = 533
           Center = True
+          Proportional = True
+          Stretch = True
           Transparent = True
         end
       end
@@ -366,6 +378,20 @@ object Form1: TForm1
         SpinButtonOptions.Placement = nbspInline
       end
     end
+  end
+  object language: TComboBox
+    Left = 1000
+    Top = 0
+    Width = 50
+    Height = 23
+    Style = csDropDownList
+    CharCase = ecUpperCase
+    TabOrder = 1
+    OnChange = languageChange
+    Items.Strings = (
+      '*'
+      'GE'
+      'EN')
   end
   object od: TOpenPictureDialog
     InitialDir = 'C:\Projekte\Arduino\AZ-Delivery\tft-bilder-anzeigen'
