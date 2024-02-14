@@ -31,8 +31,6 @@ object Form1: TForm1
     ActivePage = pictures
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 1054
-    ExplicitHeight = 729
     object pictures: TTabSheet
       Caption = 'Bilder'
       DesignSize = (
@@ -41,6 +39,13 @@ object Form1: TForm1
       object Label2: TLabel
         Left = 737
         Top = 60
+        Width = 35
+        Height = 15
+        Caption = 'Name:'
+      end
+      object Label9: TLabel
+        Left = 33
+        Top = 39
         Width = 35
         Height = 15
         Caption = 'Name:'
@@ -113,6 +118,7 @@ object Form1: TForm1
           Checked = True
           State = cbChecked
           TabOrder = 0
+          OnClick = showSize
         end
         object num: TNumberBox
           Left = 63
@@ -124,6 +130,7 @@ object Form1: TForm1
           TabOrder = 1
           Value = 1.000000000000000000
           SpinButtonOptions.Placement = nbspInline
+          OnChange = showSize
         end
       end
       object Panel2: TPanel
@@ -207,21 +214,33 @@ object Form1: TForm1
         ParentBackground = False
         TabOrder = 8
         VerticalAlignment = taAlignTop
-        object img: TImage
-          AlignWithMargins = True
-          Left = 0
-          Top = 27
-          Width = 500
-          Height = 534
-          AutoSize = True
-          Center = True
-          Proportional = True
-          Stretch = True
+        object ScrollBox1: TScrollBox
+          Left = 11
+          Top = 41
+          Width = 478
+          Height = 512
+          TabOrder = 0
+          object img: TImage
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 468
+            Height = 502
+            Align = alClient
+            AutoSize = True
+            Center = True
+            Proportional = True
+            Stretch = True
+            ExplicitLeft = -80
+            ExplicitTop = 163
+            ExplicitWidth = 500
+            ExplicitHeight = 137
+          end
         end
       end
       object Panel5: TPanel
-        Left = 536
-        Top = 113
+        Left = 539
+        Top = 116
         Width = 500
         Height = 568
         Margins.Right = 0
@@ -229,27 +248,47 @@ object Form1: TForm1
         Anchors = []
         BevelEdges = []
         BevelOuter = bvNone
-        BorderWidth = 2
-        BorderStyle = bsSingle
         Caption = 'Umgewandeltes Bild'
-        Color = clWhite
-        Ctl3D = False
+        Color = clGradientInactiveCaption
+        Ctl3D = True
         ParentBackground = False
         ParentCtl3D = False
         TabOrder = 9
         VerticalAlignment = taAlignTop
-        ExplicitLeft = 533
-        ExplicitTop = 112
-        object img1: TImage
-          Left = 1
-          Top = 28
-          Width = 492
-          Height = 533
-          Center = True
-          Proportional = True
-          Stretch = True
-          Transparent = True
+        ExplicitLeft = 536
+        ExplicitTop = 115
+        object ScrollBox3: TScrollBox
+          Left = 11
+          Top = 41
+          Width = 478
+          Height = 512
+          TabOrder = 0
+          object img1: TImage
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 468
+            Height = 502
+            Align = alClient
+            AutoSize = True
+            Center = True
+            Proportional = True
+            Stretch = True
+            Transparent = True
+            ExplicitLeft = 0
+            ExplicitWidth = 460
+            ExplicitHeight = 504
+          end
         end
+      end
+      object size: TEdit
+        Left = 24
+        Top = 37
+        Width = 161
+        Height = 23
+        ReadOnly = True
+        TabOrder = 10
+        Text = '0 x 0'
       end
     end
     object fonts: TTabSheet
@@ -299,14 +338,72 @@ object Form1: TForm1
         Height = 23
         TabOrder = 1
       end
-      object ScrollBox1: TScrollBox
-        Left = 3
-        Top = 3
+      object baseline: TNumberBox
+        Left = 960
+        Top = 266
+        Width = 65
+        Height = 23
+        MaxValue = 50.000000000000000000
+        TabOrder = 2
+        Value = 33.000000000000000000
+        SpinButtonOptions.Placement = nbspInline
+      end
+      object SavFont: TButton
+        Left = 856
+        Top = 64
+        Width = 169
+        Height = 25
+        Caption = 'Font speichern'
+        TabOrder = 3
+        OnClick = SavFontClick
+      end
+      object lineheight: TNumberBox
+        Left = 960
+        Top = 306
+        Width = 65
+        Height = 23
+        MaxValue = 50.000000000000000000
+        TabOrder = 4
+        Value = 33.000000000000000000
+        SpinButtonOptions.Placement = nbspInline
+      end
+      object newfont: TButton
+        Left = 856
+        Top = 344
+        Width = 169
+        Height = 25
+        Caption = 'Werte '#252'bernehmen'
+        TabOrder = 5
+        OnClick = newfontClick
+      end
+      object Button1: TButton
+        Left = 856
+        Top = 384
+        Width = 169
+        Height = 25
+        Caption = 'Alle Zeichen l'#246'schen'
+        TabOrder = 6
+        OnClick = Button1Click
+      end
+      object fontheight: TNumberBox
+        Left = 960
+        Top = 221
+        Width = 65
+        Height = 23
+        MinValue = 10.000000000000000000
+        MaxValue = 50.000000000000000000
+        TabOrder = 7
+        Value = 42.000000000000000000
+        SpinButtonOptions.Placement = nbspInline
+      end
+      object ScrollBox2: TScrollBox
+        Left = 11
+        Top = 6
         Width = 822
         Height = 694
         HorzScrollBar.Visible = False
         VertScrollBar.ButtonSize = 16
-        TabOrder = 2
+        TabOrder = 8
         OnMouseWheel = ScrollBox1MouseWheel
         object gllist: TPaintBox
           Left = 0
@@ -318,64 +415,6 @@ object Form1: TForm1
           OnPaint = gllistPaint
           ExplicitWidth = 800
         end
-      end
-      object baseline: TNumberBox
-        Left = 960
-        Top = 266
-        Width = 65
-        Height = 23
-        MaxValue = 50.000000000000000000
-        TabOrder = 3
-        Value = 33.000000000000000000
-        SpinButtonOptions.Placement = nbspInline
-      end
-      object SavFont: TButton
-        Left = 856
-        Top = 64
-        Width = 169
-        Height = 25
-        Caption = 'Font speichern'
-        TabOrder = 4
-        OnClick = SavFontClick
-      end
-      object lineheight: TNumberBox
-        Left = 960
-        Top = 306
-        Width = 65
-        Height = 23
-        MaxValue = 50.000000000000000000
-        TabOrder = 5
-        Value = 33.000000000000000000
-        SpinButtonOptions.Placement = nbspInline
-      end
-      object newfont: TButton
-        Left = 856
-        Top = 344
-        Width = 169
-        Height = 25
-        Caption = 'Werte '#252'bernehmen'
-        TabOrder = 6
-        OnClick = newfontClick
-      end
-      object Button1: TButton
-        Left = 856
-        Top = 384
-        Width = 169
-        Height = 25
-        Caption = 'Alle Zeichen l'#246'schen'
-        TabOrder = 7
-        OnClick = Button1Click
-      end
-      object fontheight: TNumberBox
-        Left = 960
-        Top = 221
-        Width = 65
-        Height = 23
-        MinValue = 10.000000000000000000
-        MaxValue = 50.000000000000000000
-        TabOrder = 8
-        Value = 42.000000000000000000
-        SpinButtonOptions.Placement = nbspInline
       end
     end
   end

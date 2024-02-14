@@ -38,8 +38,6 @@ type
     odf: TOpenDialog;
     e_namef: TEdit;
     Label4: TLabel;
-    gllist: TPaintBox;
-    ScrollBox1: TScrollBox;
     Label7: TLabel;
     baseline: TNumberBox;
     Label5: TLabel;
@@ -55,6 +53,12 @@ type
     img1: TImage;
     language: TComboBox;
     Label8: TLabel;
+    ScrollBox1: TScrollBox;
+    ScrollBox2: TScrollBox;
+    gllist: TPaintBox;
+    ScrollBox3: TScrollBox;
+    Label9: TLabel;
+    size: TEdit;
     procedure LoadImgClick(Sender: TObject);
     procedure ConvertImgClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -70,6 +74,7 @@ type
     procedure Button1Click(Sender: TObject);
     procedure languageChange(Sender: TObject);
     procedure languageDblClick(Sender: TObject);
+    procedure showSize(Sender: TObject);
   private
     { Private-Deklarationen }
     imgPath: string;
@@ -91,7 +96,7 @@ type
     function col565Tocol888(col:word) : TColor;
     function ColorToGray(c: TColor): byte;
     function GrayToColor(col:Byte) : TColor;
-    procedure convertPart(w:integer;h:integer; xo:integer; yo:integer; cnv:tCanvas);
+    procedure convertPart(w:integer;h:integer; xo:integer; yo:integer; cnv:tCanvas; cnv1:tCanvas);
     procedure loadFont(fn : String);
     function readUntil(var fs : TStreamReader; pattern : String; cend : Char) : boolean;
     function readChar(var b : Char; var  fs : TStreamReader):boolean;
@@ -125,8 +130,9 @@ begin
     begin
       { If it exists, load the data into the image component. }
       img.Picture.LoadFromFile(od.FileName);
-      img1.Canvas.Brush.Color := clWhite;
-      img1.Canvas.FillRect(img1.Canvas.ClipRect);
+      //img1.Canvas.Brush.Color := clWhite;
+      //img1.Canvas.FillRect(img1.Canvas.ClipRect);
+      showSize(self);
       e_name.Text := TPath.GetFileNameWithoutExtension(od.FileName);
       writeToIni('ImgPath',TPath.GetDirectoryName(od.FileName));
       res.Lines.Clear;
@@ -148,16 +154,24 @@ end;
 
 procedure TForm1.ConvertImgClick(Sender: TObject);
 var i, x,y,n : integer;
-    bmp: tBitmap;
+    bmp, bmp1: tBitmap;
 
 begin
   bmp := TBitmap.Create;
+  bmp1 := TBitmap.Create;
   try
     bmp.PixelFormat := pf32bit;
     bmp.Width := img.Picture.Width;
     bmp.Height := img.Picture.Height;
     bmp.Transparent := false;
+    bmp1.PixelFormat := pf24bit;
+    bmp1.Width := img.Picture.Width;
+    bmp1.Height := img.Picture.Height;
+    bmp1.Transparent := false;
+    bmp1.TransparentColor := clGradientInactiveCaption;
+    bmp1.TransparentMode := tmfixed;
     bmp.Canvas.Draw(0, 0, img.Picture.Graphic,128);
+    bmp1.Canvas.Draw(0, 0, img.Picture.Graphic,128);
     //img1.Canvas.Draw(0, 0, img.Picture.Graphic,128);
     n := num.ValueInt;
     if vert.Checked then
@@ -182,7 +196,7 @@ begin
         res.Lines.Add('const uint16_t PROGMEM '+e_name.Text+' ['+inttostr(n)+']['+inttostr(x * y)+'] = {');
          for i := 0 to n-1 do
       begin
-      if vert.Checked then   convertPart(x,y,0,i * y, bmp.Canvas)  else  convertPart(x,y,i * x,0,bmp.Canvas) ;
+      if vert.Checked then   convertPart(x,y,0,i * y, bmp.Canvas,bmp1.Canvas)  else  convertPart(x,y,i * x,0,bmp.Canvas,bmp1.Canvas) ;
       res.Lines.Add(',');
       end;
 
@@ -196,9 +210,10 @@ begin
         res.Lines.Add('const uint8_t PROGMEM '+e_name.Text+' ['+inttostr(x * y)+'] = {')
       else
         res.Lines.Add('const uint16_t PROGMEM '+e_name.Text+' ['+inttostr(x * y)+'] = ');
-        convertPart(x,y,0,0,bmp.Canvas);
+        convertPart(x,y,0,0,bmp.Canvas,bmp1.Canvas);
       res.Lines.Add(';') ;
     end;
+    img1.Picture.Bitmap := bmp1;
   finally
     bmp.Free;
   end;
@@ -247,7 +262,7 @@ begin
   end;
 end;
 
-procedure TForm1.convertPart(w: Integer; h: Integer; xo: Integer; yo: Integer; cnv:tCanvas);
+procedure TForm1.convertPart(w: Integer; h: Integer; xo: Integer; yo: Integer; cnv:tCanvas; cnv1:tCanvas);
 var ix,iy,b:integer;
   row:String;
   rgbw:word;
@@ -276,9 +291,9 @@ begin
               if inv.Checked then bit := abs(bit-1);
 
               if (bit = 1) then
-                img1.Canvas.Pixels[ix * 8 +b+xo,iy+yo]:= clBlack
+                cnv1.Pixels[ix * 8 +b+xo,iy+yo]:= clBlack
               else
-                img1.Canvas.Pixels[ix * 8 +b+xo,iy+yo]:= clWhite;
+                cnv1.Pixels[ix * 8 +b+xo,iy+yo]:= clWhite;
               m := (m shl 1) or bit;
             end
             else m := m shl 1;
@@ -294,13 +309,13 @@ begin
            if gray.Checked then
            begin
              grayval := ColorToGray(c);
-             img1.Canvas.Pixels[ix+xo,iy+yo]:= GrayToColor(grayval);
+             cnv1.Pixels[ix+xo,iy+yo]:= GrayToColor(grayval);
              row := row+'0x'+ inttohex(grayval) + ',';
            end
            else
            begin
              rgbw := ColorToRGB(c);
-             img1.Canvas.Pixels[ix+xo,iy+yo]:= col565Tocol888(rgbw);
+             cnv1.Pixels[ix+xo,iy+yo]:= col565Tocol888(rgbw);
              row := row+'0x'+ inttohex(rgbw) + ',';
            end;
            cnt := cnt+1;
@@ -903,5 +918,14 @@ begin
       end;
 end;
 
+procedure TForm1.showSize(Sender: TObject);
+var w,h,n : integer;
 
+begin
+  w := img.Picture.Width;
+  h := img.Picture.Height;
+  n := num.ValueInt;
+  if vert.Checked then h := h div n else w := w div n;
+  size.Text := IntToStr(w)+' x '+IntToStr(h);
+end;
 end.
