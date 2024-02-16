@@ -43,7 +43,6 @@ type
     Label5: TLabel;
     fontheight: TNumberBox;
     SavFont: TButton;
-    sdf: TSaveDialog;
     Label6: TLabel;
     lineheight: TNumberBox;
     newfont: TButton;
@@ -59,6 +58,29 @@ type
     ScrollBox3: TScrollBox;
     Label9: TLabel;
     size: TEdit;
+    palette: TTabSheet;
+    clist: TListBox;
+    rval: TNumberBox;
+    Panel6: TPanel;
+    Label10: TLabel;
+    Label11: TLabel;
+    gval: TNumberBox;
+    Label12: TLabel;
+    bval: TNumberBox;
+    colnam: TEdit;
+    Label13: TLabel;
+    shcol: TShape;
+    savcol: TButton;
+    clearcol: TButton;
+    sdf: TSaveDialog;
+    cd: TColorDialog;
+    msgsavimg: TLabel;
+    msgsavfont: TLabel;
+    msgsavcol: TLabel;
+    palload: TButton;
+    palsav: TButton;
+    odp: TOpenDialog;
+    sdp: TSaveDialog;
     procedure LoadImgClick(Sender: TObject);
     procedure ConvertImgClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -75,12 +97,23 @@ type
     procedure languageChange(Sender: TObject);
     procedure languageDblClick(Sender: TObject);
     procedure showSize(Sender: TObject);
+    procedure clistDrawItem(Control: TWinControl; Index: Integer;
+      Rect: TRect; State: TOwnerDrawState);
+    procedure rvalChangeValue(Sender: TObject);
+    procedure clistClick(Sender: TObject);
+    procedure clearcolClick(Sender: TObject);
+    procedure savcolClick(Sender: TObject);
+    procedure shcolMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure palsavClick(Sender: TObject);
+    procedure palloadClick(Sender: TObject);
   private
     { Private-Deklarationen }
     imgPath: string;
     imgSavePath : String;
     fontPath: string;
     fontSavePath : String;
+    palettePath : string;
     bms : array [0..256000] of byte;
     gls : array [0..255] of tglyph;
     bmsize : longint;
@@ -98,6 +131,7 @@ type
     function GrayToColor(col:Byte) : TColor;
     procedure convertPart(w:integer;h:integer; xo:integer; yo:integer; cnv:tCanvas; cnv1:tCanvas);
     procedure loadFont(fn : String);
+    procedure loadPalette(fn : String);
     function readUntil(var fs : TStreamReader; pattern : String; cend : Char) : boolean;
     function readChar(var b : Char; var  fs : TStreamReader):boolean;
     function readHexByte(var  fs : TStreamReader):integer;
@@ -109,6 +143,7 @@ type
     procedure showGlyphs;
     procedure clearGlyphs;
     function SaveFont(filename : string):Boolean;
+    function SavePalette(filename : string):Boolean;
     procedure WriteToIni(key:string; value : string);
     procedure WriteToIniInt(key:string; value : integer);
   public
@@ -150,6 +185,36 @@ begin
   fbaseline := Round(baseline.Value);
   ffontheight := Round(fontheight.Value);
   flinespace := Round(lineheight.value);
+end;
+
+procedure TForm1.palloadClick(Sender: TObject);
+begin
+  odp.InitialDir := palettePath;
+  if odp.Execute then
+    if FileExists(odp.FileName) then
+    begin
+      { If it exists, load the data into the image component. }
+      loadPalette(odp.FileName);
+      writeToIni('PalettePath',TPath.GetDirectoryName(odp.FileName));
+    end
+  else
+    begin
+      { Otherwise raise an exception. }
+      raise Exception.Create('File does not exist.');
+    end;
+end;
+
+procedure TForm1.palsavClick(Sender: TObject);
+begin
+  sdp.InitialDir := palettePath;
+  sdp.DefaultExt := 'h';
+  sdp.Filter := 'Palette header|*.h';
+  sdp.FileName := '';
+  if sdp.Execute then
+  begin
+      SavePalette(sdp.FileName);
+      writeToIni('PalettePath',TPath.GetDirectoryName(sdp.FileName));
+  end;
 end;
 
 procedure TForm1.ConvertImgClick(Sender: TObject);
@@ -238,7 +303,7 @@ begin
   end
   else
   begin
-    MessageDlg('Bild zuerst umwandeln!',mtError, [mbOK], 0);
+    MessageDlg(msgsavimg.Caption,mtError, [mbOK], 0);
   end;
 end;
 
@@ -258,7 +323,7 @@ begin
   end
   else
   begin
-    MessageDlg('Der Font braucht einen Namen!',mtError, [mbOK], 0);
+    MessageDlg(msgsavfont.Caption,mtError, [mbOK], 0);
   end;
 end;
 
@@ -344,6 +409,7 @@ begin
     ImgSavePath := Ini.ReadString('Config', 'ImgSavePath', TPath.GetPicturesPath());
     fontPath := Ini.ReadString('Config', 'FontPath', TPath.GetDocumentsPath());
     fontSavePath := Ini.ReadString('Config', 'FontSavePath', TPath.GetDocumentsPath());
+    palettePath := Ini.ReadString('Config', 'PalettePath', TPath.GetDocumentsPath());
     lng := Ini.ReadInteger('Config','Language',0);
     newFontClick(self);
   finally
@@ -522,6 +588,66 @@ begin
   MessageDlg('Ini file created', mtInformation,[mbOK],0);
 end;
 
+
+procedure TForm1.clistClick(Sender: TObject);
+var r,g,b,p : integer;
+    col : TColor;
+    Data :String;
+begin
+  if clist.ItemIndex >= 0 then
+  begin
+    Data := clist.Items[clist.ItemIndex];
+    p := Data.IndexOf('|');
+    col := StrToInt(Data.Substring(p+1));
+    colnam.Text := Data.Substring(0,p);;
+    shcol.Brush.Color := col;
+    rval.Value := col and $FF;
+    gval.Value := (col shr 8) and $FF;
+    bval.Value := (col shr 16) and $FF;
+    clearcol.Enabled := true;
+  end
+  else clearcol.Enabled := false;
+end;
+
+procedure TForm1.clistDrawItem(Control: TWinControl; Index: Integer;
+  Rect: TRect; State: TOwnerDrawState);
+var
+  LRect, OrgRect: TRect;
+  LBackground, LCol: TColor;
+  LName, it: String;
+  p : integer;
+begin
+  with clist.Canvas do
+  begin
+    it := clist.items[index];
+    p := it.IndexOf('|');
+    LCol := StrToInt(it.Substring(p+1));
+    LName := it.Substring(0,p);
+
+    //Brush.Color := StyleServices(Self).GetSystemColor(clHighlight);
+    //Font.Color := StyleServices(Self).GetSystemColor(clHighlightText);
+    OrgRect := Rect;
+    FillRect(Rect);
+
+    LBackground := Brush.Color;
+
+    LRect := Rect;
+    LRect.Right := LRect.Bottom - LRect.Top + LRect.Left;
+    InflateRect(LRect, -1, -1);
+    Brush.Color := LCol;
+    FillRect(LRect);
+
+    FrameRect(LRect);
+
+    Brush.Color := LBackground;
+    Rect.Left := LRect.Right + 5;
+
+    TextRect(Rect, Rect.Left,
+      Rect.Top + (Rect.Bottom - Rect.Top - TextHeight(LName)) div 2,
+      LName);
+
+  end;
+end;
 
 procedure TForm1.loadFont(fn: string);
 var fs : TStreamReader;
@@ -714,6 +840,20 @@ begin
 end;
 
 
+procedure TForm1.shcolMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  cd.Color := shCol.Brush.Color;
+  if cd.Execute then
+  begin
+    rval.Value := cd.Color and $F8;
+    gval.Value := (cd.Color shr 8) and $FC;
+    bval.Value := (cd.Color shr 16) and $F8;
+    shCol.Brush.Color := cd.Color;
+  end;
+
+end;
+
 procedure TForm1.showGlyphs;
 var i :integer;
     g: TGlyph;
@@ -731,6 +871,12 @@ procedure TForm1.Button1Click(Sender: TObject);
 begin
   clearGlyphs;
   gllist.Repaint;
+end;
+
+procedure TForm1.clearcolClick(Sender: TObject);
+begin
+  if clist.ItemIndex >= 0 then clist.Items.Delete(clist.ItemIndex);
+  
 end;
 
 procedure TForm1.clearGlyphs;
@@ -800,6 +946,35 @@ begin
   if l > 0 then for i := 0 to bmsize - b do bms[b + i] := bms[e + i];
   bmsize := bmsize -l;
   result := l;
+end;
+
+procedure TForm1.rvalChangeValue(Sender: TObject);
+begin
+  TNumberBox(Sender).ValueInt :=  (TNumberBox(Sender).ValueInt div 8) * 8;
+end;
+
+procedure TForm1.savcolClick(Sender: TObject);
+var n:string;
+  i, fi: Integer;
+begin
+  n := colnam.Text+'|';
+  fi := -1;
+  for i := 0 to clist.Count-1 do
+  begin
+    if clist.Items[i].StartsWith(n) then fi := i;
+  end;
+  if (fi >= 0) then
+  begin
+    if messageDlg(msgsavcol.Caption,mtConfirmation,mbYesNo,0) = mrYes then
+    begin
+      clist.Items[clist.ItemIndex]:= n + '$' + inttohex(shcol.Brush.Color);
+    end;
+
+  end
+  else
+  begin
+    clist.ItemIndex := clist.Items.Add(n + '$' + inttohex(shcol.Brush.Color));
+  end;
 end;
 
 procedure TForm1.ScrollBox1MouseWheel(Sender: TObject; Shift: TShiftState;
@@ -928,4 +1103,67 @@ begin
   if vert.Checked then h := h div n else w := w div n;
   size.Text := IntToStr(w)+' x '+IntToStr(h);
 end;
+
+function TForm1.SavePalette(filename: string): Boolean;
+var
+  f : Textfile;
+  var i,p : integer;
+      v : String;
+begin
+  AssignFile(f, FileName,CP_UTF8);
+  try
+    Rewrite(f);
+    Writeln(f, '//color palett');
+    for I := 0 to clist.Items.Count -1 do
+    begin
+      p:= clist.Items[i].IndexOf('|');
+      v:= '#define '+
+          Format('%-20s',[clist.Items[i].Substring(0,p)])+
+          ' 0x'+
+          IntToHex(colorToRgb(StrToInt(clist.Items[i].Substring(p+1))));
+      writeln(f,v);
+    end;
+   Result := True;
+  finally
+    CloseFile(f);
+  end;
+end;
+
+procedure TForm1.loadPalette(fn: string);
+var fs : TStreamReader;
+   line,nam : string;
+   i,p,c : integer;
+   cl : TColor;
+begin
+  fs := TStreamReader.Create(tFilestream.Create(fn,fmOpenRead),TEncoding.UTF8);
+  try
+  clist.Clear;
+    while not fs.EndOfStream do
+    begin
+      line := fs.ReadLine;
+      line := line.Trim;
+      if line.StartsWith('#define') then
+      begin
+        line := line.Substring(7);
+        line := line.Trim;
+        p := line.IndexOf(' ');
+        nam := line.Substring(0,p);
+        line := line.Substring(p+1);
+        line := line.Trim;
+        if line.StartsWith('0x') then
+        begin
+          c := StrToInt('$'+ line.Substring(2));
+          cl := col565Tocol888(c);
+          nam := nam + '|$' + IntToHex(cl);
+          clist.Items.Add(nam);
+        end;
+      end;
+    end;
+
+  finally
+    fs.BaseStream.Free;
+    fs.Free
+  end;
+end;
+
 end.

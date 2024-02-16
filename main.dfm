@@ -23,6 +23,30 @@ object Form1: TForm1
     Caption = 'Sprache'
     OnDblClick = languageDblClick
   end
+  object msgsavimg: TLabel
+    Left = 352
+    Top = 624
+    Width = 123
+    Height = 15
+    Caption = 'Bild zuerst umwandeln!'
+    Visible = False
+  end
+  object msgsavfont: TLabel
+    Left = 403
+    Top = 616
+    Width = 166
+    Height = 15
+    Caption = 'Der Font braucht einen Namen!'
+    Visible = False
+  end
+  object msgsavcol: TLabel
+    Left = 336
+    Top = 536
+    Width = 198
+    Height = 15
+    Caption = 'Farbe existiert bereits! '#220'berschreiben?'
+    Visible = False
+  end
   object PageControl1: TPageControl
     Left = 0
     Top = 0
@@ -240,7 +264,7 @@ object Form1: TForm1
       end
       object Panel5: TPanel
         Left = 539
-        Top = 116
+        Top = 117
         Width = 500
         Height = 568
         Margins.Right = 0
@@ -255,8 +279,6 @@ object Form1: TForm1
         ParentCtl3D = False
         TabOrder = 9
         VerticalAlignment = taAlignTop
-        ExplicitLeft = 536
-        ExplicitTop = 115
         object ScrollBox3: TScrollBox
           Left = 11
           Top = 41
@@ -417,6 +439,163 @@ object Form1: TForm1
         end
       end
     end
+    object palette: TTabSheet
+      Caption = 'Farbpalette'
+      ImageIndex = 2
+      object clist: TListBox
+        Left = 40
+        Top = 16
+        Width = 265
+        Height = 665
+        Style = lbOwnerDrawVariable
+        TabOrder = 0
+        OnClick = clistClick
+        OnDrawItem = clistDrawItem
+      end
+      object Panel6: TPanel
+        Left = 488
+        Top = 208
+        Width = 393
+        Height = 265
+        Caption = 'Farbe bearbeiten'
+        Color = clGradientInactiveCaption
+        ParentBackground = False
+        TabOrder = 1
+        VerticalAlignment = taAlignTop
+        DesignSize = (
+          393
+          265)
+        object Label10: TLabel
+          Left = 72
+          Top = 84
+          Width = 18
+          Height = 15
+          Alignment = taRightJustify
+          Anchors = [akTop, akRight]
+          Caption = 'Rot'
+        end
+        object Label11: TLabel
+          Left = 64
+          Top = 124
+          Width = 26
+          Height = 15
+          Alignment = taRightJustify
+          Anchors = [akTop, akRight]
+          Caption = 'Gr'#252'n'
+        end
+        object Label12: TLabel
+          Left = 67
+          Top = 164
+          Width = 23
+          Height = 15
+          Alignment = taRightJustify
+          Anchors = [akTop, akRight]
+          Caption = 'Blau'
+        end
+        object Label13: TLabel
+          Left = 37
+          Top = 28
+          Width = 53
+          Height = 15
+          Alignment = taRightJustify
+          Anchors = [akTop, akRight]
+          Caption = 'Farbname'
+        end
+        object shcol: TShape
+          Left = 232
+          Top = 80
+          Width = 105
+          Height = 105
+          Brush.Color = clBlack
+          OnMouseDown = shcolMouseDown
+        end
+        object rval: TNumberBox
+          Left = 96
+          Top = 80
+          Width = 89
+          Height = 23
+          LargeStep = 16.000000000000000000
+          MaxValue = 248.000000000000000000
+          SmallStep = 8.000000000000000000
+          TabOrder = 0
+          SpinButtonOptions.Placement = nbspInline
+          UseMouseWheel = True
+          OnExit = rvalChangeValue
+        end
+        object gval: TNumberBox
+          Left = 96
+          Top = 120
+          Width = 89
+          Height = 23
+          LargeStep = 8.000000000000000000
+          MaxValue = 252.000000000000000000
+          SmallStep = 4.000000000000000000
+          TabOrder = 1
+          SpinButtonOptions.Placement = nbspInline
+          UseMouseWheel = True
+          OnExit = rvalChangeValue
+        end
+        object bval: TNumberBox
+          Left = 96
+          Top = 160
+          Width = 89
+          Height = 23
+          LargeStep = 16.000000000000000000
+          MaxValue = 248.000000000000000000
+          SmallStep = 8.000000000000000000
+          TabOrder = 2
+          SpinButtonOptions.Placement = nbspInline
+          UseMouseWheel = True
+          OnExit = rvalChangeValue
+        end
+        object colnam: TEdit
+          Left = 96
+          Top = 24
+          Width = 233
+          Height = 23
+          CharCase = ecUpperCase
+          MaxLength = 18
+          TabOrder = 3
+        end
+        object savcol: TButton
+          Left = 48
+          Top = 216
+          Width = 129
+          Height = 25
+          Caption = 'Speichern'
+          TabOrder = 4
+          OnClick = savcolClick
+        end
+        object clearcol: TButton
+          Left = 199
+          Top = 216
+          Width = 138
+          Height = 25
+          Caption = 'L'#246'schen'
+          Enabled = False
+          TabOrder = 5
+          OnClick = clearcolClick
+        end
+      end
+      object palload: TButton
+        Left = 488
+        Top = 104
+        Width = 129
+        Height = 25
+        Caption = 'Palette laden'
+        TabOrder = 2
+        OnClick = palloadClick
+      end
+      object palsav: TButton
+        Left = 752
+        Top = 104
+        Width = 129
+        Height = 25
+        Caption = 'Palette Speichern'
+        TabOrder = 3
+        OnClick = palsavClick
+      end
+    end
   end
   object language: TComboBox
     Left = 1000
@@ -446,12 +625,31 @@ object Form1: TForm1
   end
   object odf: TOpenDialog
     DefaultExt = 'h'
+    Title = 'Fontdatei '#246'ffnen'
     Left = 108
     Top = 610
   end
   object sdf: TSaveDialog
+    DefaultExt = 'h'
     Options = [ofOverwritePrompt, ofHideReadOnly, ofEnableSizing]
-    Left = 156
+    Title = 'Includefile speichern'
+    Left = 160
+    Top = 608
+  end
+  object cd: TColorDialog
+    Left = 212
+    Top = 610
+  end
+  object odp: TOpenDialog
+    DefaultExt = 'h'
+    Title = 'Palette laden'
+    Left = 268
+    Top = 610
+  end
+  object sdp: TSaveDialog
+    DefaultExt = 'h'
+    Title = 'Palette speichern'
+    Left = 324
     Top = 610
   end
 end

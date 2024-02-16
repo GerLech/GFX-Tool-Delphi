@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, System.Generics.Collections, System.IniFiles,
-  Vcl.StdCtrls, vcl.ComCtrls, vcl.ExtCtrls, System.IOUtils;
+  Vcl.StdCtrls, vcl.ComCtrls, vcl.ExtCtrls, System.IOUtils, vcl.Dialogs;
 
 type
   TLangIni = class(TObject)
@@ -36,6 +36,8 @@ begin
     if (c is TPanel) then x := (c AS TPanel).Caption;
     if (c is TCheckBox) then x := (c AS TCheckBox).Caption;
     if (c is TRadioButton) then x := (c AS TRadioButton).Caption;
+    if (c is TOpenDialog) then x := (c AS TopenDialog).Title;
+
     if (x <> '') then Ini.WriteString(sect, c.name, x);
   end;
   if c.ComponentCount > 0 then
@@ -74,6 +76,7 @@ begin
           if (c is TPanel) then (c AS TPanel).Caption := ini.ReadString(sect,l[i],'');
           if (c is TCheckBox) then (c AS TCheckBox).Caption := ini.ReadString(sect,l[i],'');
           if (c is TRadioButton) then (c AS TRadioButton).Caption := ini.ReadString(sect,l[i],'');
+          if (c is TOpenDialog) then (c AS TopenDialog).Title := ini.ReadString(sect,l[i],'');
         end;
       finally
         ini.Free;
