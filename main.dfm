@@ -55,6 +55,8 @@ object Form1: TForm1
     ActivePage = pictures
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 1054
+    ExplicitHeight = 729
     object pictures: TTabSheet
       Caption = 'Bilder'
       DesignSize = (
@@ -279,6 +281,8 @@ object Form1: TForm1
         ParentCtl3D = False
         TabOrder = 9
         VerticalAlignment = taAlignTop
+        ExplicitLeft = 536
+        ExplicitTop = 116
         object ScrollBox3: TScrollBox
           Left = 11
           Top = 41

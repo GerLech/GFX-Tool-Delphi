@@ -45,7 +45,7 @@ begin
 end;
 
 begin
-    filename := ExtractFilePath(ParamStr(0)) + 'lang'+lang+'.ini';
+    filename := tPath.GetPublicPath + '\GFX_Tool\lang'+lang+'.ini';
     ini := TIniFile.Create(filename);
     try
       for i := 0 to comp.ComponentCount - 1 do  handleComp(comp.Components[i],Sect);
@@ -61,7 +61,7 @@ var ini : TiniFile;
     i  : integer;
     c  : Tcomponent;
 begin
-    filename := ExtractFilePath(ParamStr(0)) + 'lang'+lang+'.ini';
+    filename := tPath.GetPublicPath + '\GFX_Tool\lang'+lang+'.ini';
     l:= TStringlist.Create;
     try
       ini := TIniFile.Create(filename);
@@ -92,7 +92,7 @@ var SR : TsearchRec;
      dir: String;
      nam : String;
 begin
-dir := ExtractFilePath(ParamStr(0));
+dir := tPath.GetPublicPath + '\GFX_Tool\';
 if FindFirst(dir+'lang*.ini',faNormal,SR) = 0 then
   begin
     try

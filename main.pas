@@ -169,7 +169,8 @@ begin
       //img1.Canvas.FillRect(img1.Canvas.ClipRect);
       showSize(self);
       e_name.Text := TPath.GetFileNameWithoutExtension(od.FileName);
-      writeToIni('ImgPath',TPath.GetDirectoryName(od.FileName));
+      imgPath :=  TPath.GetDirectoryName(od.FileName);
+      writeToIni('ImgPath',imgPath);
       res.Lines.Clear;
     end
   else
@@ -195,7 +196,8 @@ begin
     begin
       { If it exists, load the data into the image component. }
       loadPalette(odp.FileName);
-      writeToIni('PalettePath',TPath.GetDirectoryName(odp.FileName));
+      palettePath := TPath.GetDirectoryName(odp.FileName);
+      writeToIni('PalettePath',palettePath);
     end
   else
     begin
@@ -213,7 +215,8 @@ begin
   if sdp.Execute then
   begin
       SavePalette(sdp.FileName);
-      writeToIni('PalettePath',TPath.GetDirectoryName(sdp.FileName));
+      palettePath := TPath.GetDirectoryName(sdp.FileName);
+      writeToIni('PalettePath',palettePath);
   end;
 end;
 
@@ -298,7 +301,8 @@ begin
     if sd.Execute then
     begin
         res.Lines.SaveToFile(sd.FileName);
-        writeToIni('ImgSavePath',TPath.GetDirectoryName(sd.FileName));
+        imgSavePath := TPath.GetDirectoryName(sd.FileName);
+        writeToIni('ImgSavePath',imgSavePath);
     end;
   end
   else
@@ -318,7 +322,8 @@ begin
     if sdf.Execute then
     begin
         SaveFont(sdf.FileName);
-        writeToIni('FontSavePath',TPath.GetDirectoryName(sdf.FileName));
+        fontSavePath := TPath.GetDirectoryName(sdf.FileName);
+        writeToIni('FontSavePath',fontSavePath);
     end;
   end
   else
@@ -402,7 +407,7 @@ var ini: TIniFile;
   filename: String;
   lng : integer;
 begin
-  filename := ExtractFilePath(ParamStr(0)) + 'config.ini'; //???
+  filename := tPath.GetPublicPath + '\GFX_Tool\config.ini'; //???
   ini := TIniFile.Create(filename);
   try
     ImgPath := Ini.ReadString('Config', 'ImgPath', TPath.GetPicturesPath());
@@ -439,7 +444,8 @@ begin
       { If it exists, load the data into the image component. }
       loadFont(odf.FileName);
       e_namef.Text := TPath.GetFileNameWithoutExtension(odf.FileName);
-      writeToIni('FontPath',TPath.GetDirectoryName(odf.FileName));
+      fontPath :=  TPath.GetDirectoryName(odf.FileName);
+      writeToIni('FontPath',fontPath);
     end
   else
     begin
@@ -1072,7 +1078,7 @@ procedure TForm1.WriteToIni(key: string; value: string);
 var filename : string;
     ini: TIniFile;
 begin
-      filename := ExtractFilePath(ParamStr(0)) + 'config.ini';
+      filename := tPath.GetPublicPath + '\GFX_Tool\config.ini';
       ini := TIniFile.Create(filename);
       try
         Ini.WriteString('Config', key, value);
@@ -1084,7 +1090,7 @@ procedure TForm1.WriteToIniInt(key: string; value: integer);
 var filename : string;
     ini: TIniFile;
 begin
-      filename := ExtractFilePath(ParamStr(0)) + 'config.ini';
+      filename := tPath.GetPublicPath + '\GFX_Tool\config.ini';
       ini := TIniFile.Create(filename);
       try
         Ini.WriteInteger('Config', key, value);
