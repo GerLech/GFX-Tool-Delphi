@@ -28,7 +28,7 @@ object PE: TPE
     OnPaint = pbPaint
   end
   object Label7: TLabel
-    Left = 589
+    Left = 585
     Top = 55
     Width = 30
     Height = 15
@@ -38,7 +38,7 @@ object PE: TPE
     ExplicitLeft = 588
   end
   object Label1: TLabel
-    Left = 735
+    Left = 731
     Top = 56
     Width = 29
     Height = 15
@@ -48,7 +48,7 @@ object PE: TPE
     ExplicitLeft = 734
   end
   object Label2: TLabel
-    Left = 547
+    Left = 543
     Top = 92
     Width = 72
     Height = 15
@@ -58,24 +58,22 @@ object PE: TPE
     ExplicitLeft = 546
   end
   object Label3: TLabel
-    Left = 716
-    Top = 131
+    Left = 567
+    Top = 130
     Width = 48
     Height = 15
     Alignment = taRightJustify
     Anchors = [akTop, akRight]
     Caption = 'X-Versatz'
-    ExplicitLeft = 715
   end
   object Label4: TLabel
-    Left = 571
+    Left = 712
     Top = 130
     Width = 48
     Height = 15
     Alignment = taRightJustify
     Anchors = [akTop, akRight]
     Caption = 'Y-Versatz'
-    ExplicitLeft = 570
   end
   object mvleft: TSpeedButton
     Left = 650
@@ -130,7 +128,7 @@ object PE: TPE
     OnClick = moveClick
   end
   object lix: TLabel
-    Left = 546
+    Left = 542
     Top = 23
     Width = 73
     Height = 15
@@ -140,17 +138,16 @@ object PE: TPE
     ExplicitLeft = 545
   end
   object Label5: TLabel
-    Left = 564
+    Left = 560
     Top = 168
     Width = 55
     Height = 15
     Alignment = taRightJustify
     Anchors = [akTop, akRight]
     Caption = 'Hilfslinie 1'
-    ExplicitLeft = 563
   end
   object Label6: TLabel
-    Left = 709
+    Left = 705
     Top = 169
     Width = 55
     Height = 15
@@ -284,7 +281,7 @@ object PE: TPE
       Left = 66
       Top = 88
       Width = 63
-      Height = 19
+      Height = 15
       Caption = 'Schwellwert'
     end
     object Label9: TLabel

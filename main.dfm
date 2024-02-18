@@ -266,7 +266,7 @@ object Form1: TForm1
       end
       object Panel5: TPanel
         Left = 539
-        Top = 117
+        Top = 118
         Width = 500
         Height = 568
         Margins.Right = 0
@@ -282,7 +282,7 @@ object Form1: TForm1
         TabOrder = 9
         VerticalAlignment = taAlignTop
         ExplicitLeft = 536
-        ExplicitTop = 116
+        ExplicitTop = 117
         object ScrollBox3: TScrollBox
           Left = 11
           Top = 41
