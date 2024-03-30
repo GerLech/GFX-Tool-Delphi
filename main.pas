@@ -81,6 +81,9 @@ type
     palsav: TButton;
     odp: TOpenDialog;
     sdp: TSaveDialog;
+    BtnNewFont: TButton;
+    Label14: TLabel;
+    swm: TNumberBox;
     procedure LoadImgClick(Sender: TObject);
     procedure ConvertImgClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -107,6 +110,7 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure palsavClick(Sender: TObject);
     procedure palloadClick(Sender: TObject);
+    procedure BtnNewFontClick(Sender: TObject);
   private
     { Private-Deklarationen }
     imgPath: string;
@@ -873,6 +877,100 @@ for i := 0 to 255 do
   end;   }
 end;
 
+procedure TForm1.BtnNewFontClick(Sender: TObject);
+ var fptmp : tfontParam;
+     bm : tBitmap;
+     bits : array[0..512] of byte;
+     i,l,i1,l2,i2,b1 :  integer;
+     c :  AnsiChar;
+     b, rtxt : tRect;
+     sz : TSize;
+     col,row : integer;
+     m : word;
+     by : byte;
+     gl : Tglyph;
+     eq : boolean;
+
+begin
+  if PE.FD.Execute then
+  begin
+  rtxt := Rect(0,0,50,50);
+    maxwidth := 0;
+    ClearGlyphs;
+    PE.le.Canvas.Font := PE.FD.Font;
+    fptmp := PE.FP;
+    PE.setFontParams(fptmp);
+    PE.FP := fptmp;
+    PE.HL1.Value := fptmp.top;
+    PE.HL2.Value := fptmp.lowerTop;
+    baseline.Value := fptmp.baseline;
+    fontheight.Value := fptmp.bottom;
+    lineheight.Value := fptmp.height;
+    fbaseline := Round(baseline.Value);
+    ffontheight := Round(fontheight.Value);
+    flinespace := Round(lineheight.value);
+    bm := tBitmap.Create;
+    try
+      bm.Width := 50;
+      bm.Height := 50;
+
+//      bm.Monochrome := true;
+//      bm.PixelFormat := pf1bit;
+      bm.Canvas.Font := PE.le.Canvas.Font;
+      bm.Canvas.Pen.Color := clBlack;
+      for I := 32 to 255 do
+      begin
+        c:= AnsiChar(i);
+        gl := gls[i];
+        sz := bm.Canvas.TextExtent(c);
+        if (i AND $7F) > 31  then
+        begin
+          bm.Canvas.Brush.Color := clWhite;
+          bm.Canvas.FillRect(Rect(0,0,50,50));
+          bm.Canvas.TextRect(rtxt,0,0,c);
+          b := rect(0,0,0,0);
+          PE.getBoundingBox(b,bm.Canvas, round(swm.Value));
+          gl.w := b.Right-b.Left+1;
+          gl.h := b.Bottom - b.Top +1;;
+          gl.adv := sz.Width;
+          gl.xo := b.Left;
+          gl.yo := b.Top - PE.FP.Baseline;
+          l:= (gl.w * gl.h + 7) div 8;
+          if (gl.xo + gl.w) > maxwidth  then maxwidth := gl.xo+gl.w;
+          if (bmsize + l) < length(bms) then
+          begin
+            gls[i] := gl;
+            for i2 := i+1 to 255 do gls[i2].offset :=  gls[i].offset + l;
+            bmsize := bmsize + l;
+            by := 0; m := 128; i1:=gls[i].offset;
+            for row := b.Top to b.Bottom do
+              begin
+              for col := b.Left to b.Right  do
+                begin
+                if PE.pixelBlack(bm.Canvas.Pixels[col,row],round(swm.Value)) then by := by or m;
+                m := m shr 1;
+                if m = 0 then
+                begin
+                  m := 128;
+                  bms[i1]:=by;
+                  by:=0;
+                  inc(i1);
+                end;
+                end;
+
+              end;
+            if (i1-gls[i].offset) < l then bms[i1] := by;
+          end;
+        end;
+      end;
+
+    finally
+      bm.Free;
+    end;
+    gllist.Repaint;
+  end;
+end;
+
 procedure TForm1.Button1Click(Sender: TObject);
 begin
   clearGlyphs;
@@ -882,7 +980,7 @@ end;
 procedure TForm1.clearcolClick(Sender: TObject);
 begin
   if clist.ItemIndex >= 0 then clist.Items.Delete(clist.ItemIndex);
-  
+
 end;
 
 procedure TForm1.clearGlyphs;

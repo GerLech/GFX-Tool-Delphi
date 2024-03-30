@@ -3,7 +3,7 @@ object PE: TPE
   Top = 0
   BorderIcons = []
   BorderStyle = bsDialog
-  Caption = 'Pixel Editor'
+  Caption = 'le.'
   ClientHeight = 530
   ClientWidth = 866
   Color = clBtnFace
@@ -28,7 +28,7 @@ object PE: TPE
     OnPaint = pbPaint
   end
   object Label7: TLabel
-    Left = 585
+    Left = 565
     Top = 55
     Width = 30
     Height = 15
@@ -38,7 +38,7 @@ object PE: TPE
     ExplicitLeft = 588
   end
   object Label1: TLabel
-    Left = 731
+    Left = 711
     Top = 56
     Width = 29
     Height = 15
@@ -48,7 +48,7 @@ object PE: TPE
     ExplicitLeft = 734
   end
   object Label2: TLabel
-    Left = 543
+    Left = 523
     Top = 92
     Width = 72
     Height = 15
@@ -58,22 +58,24 @@ object PE: TPE
     ExplicitLeft = 546
   end
   object Label3: TLabel
-    Left = 567
+    Left = 547
     Top = 130
     Width = 48
     Height = 15
     Alignment = taRightJustify
     Anchors = [akTop, akRight]
     Caption = 'X-Versatz'
+    ExplicitLeft = 567
   end
   object Label4: TLabel
-    Left = 712
+    Left = 692
     Top = 130
     Width = 48
     Height = 15
     Alignment = taRightJustify
     Anchors = [akTop, akRight]
     Caption = 'Y-Versatz'
+    ExplicitLeft = 712
   end
   object mvleft: TSpeedButton
     Left = 650
@@ -128,7 +130,7 @@ object PE: TPE
     OnClick = moveClick
   end
   object lix: TLabel
-    Left = 542
+    Left = 522
     Top = 23
     Width = 73
     Height = 15
@@ -138,16 +140,17 @@ object PE: TPE
     ExplicitLeft = 545
   end
   object Label5: TLabel
-    Left = 560
+    Left = 540
     Top = 168
     Width = 55
     Height = 15
     Alignment = taRightJustify
     Anchors = [akTop, akRight]
     Caption = 'Hilfslinie 1'
+    ExplicitLeft = 560
   end
   object Label6: TLabel
-    Left = 705
+    Left = 685
     Top = 169
     Width = 55
     Height = 15
@@ -155,6 +158,20 @@ object PE: TPE
     Anchors = [akTop, akRight]
     Caption = 'Hilfslinie 2'
     ExplicitLeft = 708
+  end
+  object lw: TLabel
+    Left = 784
+    Top = 248
+    Width = 12
+    Height = 15
+    Caption = 'lw'
+  end
+  object lh: TLabel
+    Left = 784
+    Top = 280
+    Width = 10
+    Height = 15
+    Caption = 'lh'
   end
   object Button1: TButton
     Left = 539
@@ -274,7 +291,13 @@ object PE: TPE
       Width = 50
       Height = 50
       Color = clWhite
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Arial'
+      Font.Style = []
       ParentColor = False
+      ParentFont = False
       OnPaint = lePaint
     end
     object Label8: TLabel
@@ -291,23 +314,23 @@ object PE: TPE
       Height = 15
       Caption = 'Zeichen'
     end
-    object Button3: TButton
+    object btnassig: TButton
       Left = 87
       Top = 121
       Width = 146
       Height = 25
       Caption = #220'bernehmen'
       TabOrder = 0
-      OnClick = Button3Click
+      OnClick = btnassigClick
     end
-    object Button4: TButton
+    object btmfont: TButton
       Left = 63
       Top = 25
       Width = 138
       Height = 25
       Caption = 'Font'
       TabOrder = 1
-      OnClick = Button4Click
+      OnClick = btmfontClick
     end
     object sw: TNumberBox
       Left = 135

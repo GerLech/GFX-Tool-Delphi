@@ -265,8 +265,8 @@ object Form1: TForm1
         end
       end
       object Panel5: TPanel
-        Left = 539
-        Top = 118
+        Left = 527
+        Top = 119
         Width = 500
         Height = 568
         Margins.Right = 0
@@ -281,8 +281,6 @@ object Form1: TForm1
         ParentCtl3D = False
         TabOrder = 9
         VerticalAlignment = taAlignTop
-        ExplicitLeft = 536
-        ExplicitTop = 117
         object ScrollBox3: TScrollBox
           Left = 11
           Top = 41
@@ -347,6 +345,13 @@ object Form1: TForm1
         Width = 59
         Height = 15
         Caption = 'Zeilenh'#246'he'
+      end
+      object Label14: TLabel
+        Left = 873
+        Top = 472
+        Width = 63
+        Height = 15
+        Caption = 'Schwellwert'
       end
       object getfont: TButton
         Left = 856
@@ -441,6 +446,25 @@ object Form1: TForm1
           OnPaint = gllistPaint
           ExplicitWidth = 800
         end
+      end
+      object BtnNewFont: TButton
+        Left = 856
+        Top = 424
+        Width = 169
+        Height = 25
+        Caption = 'Neue Schrift erzeugen'
+        TabOrder = 9
+        OnClick = BtnNewFontClick
+      end
+      object swm: TNumberBox
+        Left = 942
+        Top = 467
+        Width = 68
+        Height = 23
+        MaxValue = 255.000000000000000000
+        TabOrder = 10
+        Value = 210.000000000000000000
+        SpinButtonOptions.Placement = nbspInline
       end
     end
     object palette: TTabSheet

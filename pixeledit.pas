@@ -8,13 +8,21 @@ uses
   Vcl.NumberBox, System.ImageList, Vcl.ImgList, Vcl.Buttons, Vcl.Mask, LanguageIni ;
 
 type
+  TFontParam = record
+    baseline : Integer;
+    top : Integer;
+    lowerTop : Integer;
+    bottom : Integer;
+    height : Integer;
+  end;
+
   TGlyph = record
-  offset : word;
-  w : Integer;
-  h : Integer;
-  adv : Integer;
-  xo : Integer;
-  yo : Integer;
+    offset : word;
+    w : Integer;
+    h : Integer;
+    adv : Integer;
+    xo : Integer;
+    yo : Integer;
   end;
 
   TMemArray = Array of Byte;
@@ -36,8 +44,8 @@ type
     le: TPaintBox;
     FD: TFontDialog;
     Letter: TEdit;
-    Button3: TButton;
-    Button4: TButton;
+    btnassig: TButton;
+    btmfont: TButton;
     mvleft: TSpeedButton;
     ImageList1: TImageList;
     mvup: TSpeedButton;
@@ -53,6 +61,8 @@ type
     Label8: TLabel;
     Panel1: TPanel;
     Label9: TLabel;
+    lw: TLabel;
+    lh: TLabel;
     procedure pbPaint(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure nbxoChangeValue(Sender: TObject);
@@ -63,8 +73,8 @@ type
     procedure pbMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure LetterChange(Sender: TObject);
-    procedure Button4Click(Sender: TObject);
-    procedure Button3Click(Sender: TObject);
+    procedure btmfontClick(Sender: TObject);
+    procedure btnassigClick(Sender: TObject);
     procedure moveClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure lePaint(Sender: TObject);
@@ -82,6 +92,7 @@ type
     yOffset:integer;
     FReady : Byte;
     FBm : array[0..50,0..50] of boolean;
+    fFP : TFontParam;
     procedure PaintGrid;
     procedure SetGlyph(val : TGlyph);
     procedure SetPixels(val : TMemArray);
@@ -89,17 +100,21 @@ type
     procedure SetBaseline(val : integer);
     procedure SetFontheight(val : integer);
     function GetPixels: TMemArray;
-    function CheckRow(r:integer):boolean;
-    function CheckCol(c:integer):boolean;
-    function pixelBlack(col : TColor) : boolean;
+    function CheckRow(r:integer; cv : TCanvas; sw : integer):boolean;
+    function CheckCol(c:integer; cv : TCanvas; sw : integer):boolean;
+    procedure drawLetter(l:String);
   public
     { Public-Deklarationen }
+    procedure getBoundingBox(var b :tRect; cv : TCanvas; sw : integer);
+    procedure setFontParams(var fp : TFontParam);
+    function pixelBlack(col : TColor; sw : Integer) : boolean;
     property Index : integer read FIndex write SetIndex;
     property Glyph : tGlyph read FGlyph write SetGlyph;
     property Pixels : TMemArray read GetPixels write SetPixels;
     property Baseline : Integer read FBaseLine write setBaseline;
     property Fontheight : Integer read fFontHeight write SetFontHeight;
     property Ready : Byte read FReady write FReady;
+    property FP: TFontParam read fFP write fFP;
   end;
 
 var
@@ -217,95 +232,143 @@ begin
   pb.Canvas.MoveTo(0,(fontheight+1) * 10); pb.Canvas.LineTo(500,(fontheight+1) * 10);
 end;
 
-procedure TPE.Button3Click(Sender: TObject);
-var xmin,xmax,ymin,ymax,r,c : integer;
+procedure TPE.getBoundingBox(var b: TRect; cv : TCanvas; sw : integer);
+var r,c : integer;
     f : boolean;
-    col : TColor;
 begin
-  r:=0; f := false;
-  xmax := 0; xmin := 0;
-  ymax := 0; ymin := 0;
+  f := false; r:= 0; c:= 0;
   while (r<50) and (not f) do
   begin
-    f := checkrow(r);
-    if f then ymin := r;
+    f := checkrow(r, cv,sw);
+    if f then b.Top := r;
     inc(r);
   end;
   r:=49; f := false;
   while (r>=0) and (not f) do
   begin
-    f := checkrow(r);
-    if f then ymax := r;
+    f := checkrow(r, cv, sw);
+    if f then b.Bottom := r;
     dec(r);
   end;
   c:=0; f := false;
   while (c<50) and (not f) do
   begin
-    f := checkcol(c);
-    if f then xmin := c;
+    f := checkcol(c, cv, sw);
+    if f then b.Left := c;
     inc(c);
   end;
   c:=49; f := false;
   while (c>=0) and (not f) do
   begin
-    f := checkcol(c);
-    if f then xmax := c;
+    f := checkcol(c, cv, sw);
+    if f then b.Right := c;
     dec(c);
   end;
-  fglyph.w := xmax - xmin + 1;
-  fglyph.h := ymax - ymin + 1;
-  fglyph.yo := (fglyph.h -1) * -1;
+end;
+
+procedure TPE.setFontParams(var fp : TFontParam);
+var r : tRect;
+    sz : tSize;
+    bm : tBitmap;
+begin
+  bm := tBitmap.Create;
+  try
+    bm.Width := 50;
+    bm.Height := 50;
+    bm.Canvas.Brush.Color := clWhite;
+    bm.Canvas.Pen.Color := clBlack;
+    bm.Canvas.Font := le.Canvas.Font;
+    sz := bm.Canvas.TextExtent('Mg');
+    fp.height := sz.Height;
+    r := Rect(0,0,0,0);
+    bm.Canvas.FillRect(bm.Canvas.ClipRect);
+    Bm.Canvas.TextOut(0,0,'B');
+    getBoundingBox(r,bm.canvas, round(sw.Value));
+    fp.baseline := r.Bottom;
+    fp.top := r.Top;
+    r := Rect(0,0,0,0);
+    bm.Canvas.FillRect(bm.Canvas.ClipRect);
+    bm.Canvas.TextOut(0,0,'g');
+    getBoundingBox(r,bm.canvas, round(sw.Value));
+    fp.lowerTop := r.Top;
+    fp.bottom := r.Bottom;
+  finally
+    bm.Free;
+  end;
+end;
+
+procedure TPE.btnassigClick(Sender: TObject);
+var r,c,xx : integer;
+    col : TColor;
+    sz : tsize;
+    b: tRect;
+begin
+  sz := le.Canvas.TextExtent(letter.Text);
+  b := Rect(0,0,0,0);
+  getBoundingBox(b, le.Canvas, round(sw.Value));
+  fglyph.w := b.Right - b.Left + 1;
+  fglyph.h := b.Bottom - b.Top + 1;
+  fglyph.yo := b.Top - FP.Baseline ;
+  fglyph.adv := sz.Width;
+  fglyph.xo :=  b.Left;
   nbyo.Value := fglyph.yo;
   nbw.Value := fglyph.w;
   nbh.Value := fglyph.h;
+  nbadv.Value := fglyph.adv;
+  nbxo.Value := fglyph.xo;
+  xx:= sz.Width - sz.Height;
   for c := 0 to fglyph.w do
     begin
     for r := 0 to fglyph.h do
       begin
-      col := le.Canvas.Pixels[xmin+c,ymin+r];
-       FBm[c,r] := pixelBlack(col);
+      col := le.Canvas.Pixels[b.Left+c,b.Top+r];
+       FBm[c,r] := pixelBlack(col, round(sw.Value));
       end;
     end;
   PaintGrid;
 end;
 
-function TPe.pixelBlack(col: TColor): Boolean;
+function TPe.pixelBlack(col: TColor; sw : integer): Boolean;
 var
   r,g,b : byte;
 begin
-  r:= getRVAlue(col);
-  g:= getGVAlue(col);
-  b:= getBVAlue(col);
-  Result := ((r+b+g) div 3) < sw.Value;
+  if col >= 0 then
+  begin
+    r:= getRVAlue(col);
+    g:= getGVAlue(col);
+    b:= getBVAlue(col);
+    Result := ((r+b+g) div 3) < sw;
+  end else result := false
 end;
 
-function TPE.checkrow(r:integer):boolean;
+function TPE.checkrow(r:integer; cv : TCanvas; sw : integer):boolean;
 var c:integer;
 begin
   result:= false; c:=0;
   while(c < 50) and (not result) do
   begin
-    result := pixelBlack(le.Canvas.Pixels[c,r]);
+    result := pixelBlack(cv.Pixels[c,r], sw);
     inc(c);
   end;
 end;
 
-function TPE.checkcol(c:integer):boolean;
+function TPE.checkcol(c:integer; cv : TCanvas; sw : integer):boolean;
 var r:integer;
 begin
   result:= false; r:=0;
   while(r < 50) and (not result) do
   begin
-    result := pixelBlack(le.Canvas.Pixels[c,r]);
+    result := pixelBlack(cv.Pixels[c,r], sw);
     inc(r);
   end;
 end;
 
-procedure TPE.Button4Click(Sender: TObject);
+procedure TPE.btmfontClick(Sender: TObject);
 begin
   if fd.Execute then
   begin
     le.Canvas.Font:= fd.Font;
+    setFontParams(fFP);
     LetterChange(self);
   end;
 end;
@@ -314,12 +377,13 @@ procedure TPE.FormCreate(Sender: TObject);
 begin
   Ready := 0;
   TLangIni.ReadLanguage(self,'PE', Form1.language.Text);
+  setFontParams(fFP);
 end;
 
 procedure TPE.FormShow(Sender: TObject);
 begin
-    le.Canvas.Font:= fd.Font;
-    LetterChange(self);
+  le.Canvas.Font:= fd.Font;
+  LetterChange(self);
 end;
 
 function TPE.GetPixels: TMemArray;
@@ -351,21 +415,27 @@ procedure TPE.HL1ChangeValue(Sender: TObject);
 begin
   paintGrid;
 end;
-
+procedure TPE.drawLetter(l: string);
+var r:tRect;
+begin
+    r := Rect(0, 0, 50, 50);
+    le.Canvas.TextRect(r,0,0,l);
+end;
 procedure TPE.lePaint(Sender: TObject);
 begin
     le.Canvas.Brush.Color := clWhite;
     le.Canvas.Font := FD.Font;
     le.Canvas.FillRect(le.Canvas.ClipRect);
-    le.Canvas.TextOut(0,0,letter.Text);
+    drawLetter(letter.Text);
 end;
 
 procedure TPE.LetterChange(Sender: TObject);
+var r : TRect;
 begin
     le.Canvas.Brush.Color := clWhite;
     le.Canvas.Font := FD.Font;
     le.Canvas.FillRect(le.Canvas.ClipRect);
-    le.Canvas.TextOut(0,0,letter.Text);
+    drawLetter(letter.Text);
 end;
 
 procedure TPE.moveClick(Sender: TObject);
