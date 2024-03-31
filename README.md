@@ -5,6 +5,8 @@
 + Fonts have to be in a special format to be used with GFX library. The fonts delivered with the library have only the 7-bit ASCII characters. German umlauts for example dont exist. With the GFX tool you can add missing characters. It is also possible to create a new font from scratch. The output is a header file with the structure required by the library.
 + An other little tool helps you to create a color palette to be used in your project. The tool generates an header file which defines constants for colors in the 16-bit 565 format.
   
+**For a more detailed descriptio see the [wiki](https://github.com/GerLech/GFX-Tool-Delphi/wiki).**
+
 The release contains all required source files to build the application with the Delphi 11 community edition.  
 If you want, you can also download installation files for [32-bit](https://github.com/GerLech/GFX-Tool-Delphi/raw/master/Win32/GFX_Tool32_Setup.exe) 
 and [64-bit](https://github.com/GerLech/GFX-Tool-Delphi/raw/master/Win64/GFX_Tool64_Setup.exe)  Windows.  
