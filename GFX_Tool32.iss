@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "GFX_Tool32"
-#define MyAppVersion "3.0"
+#define MyAppVersion "3.1"
 #define MyAppPublisher "Gerald Lechner"
 #define MyAppURL "https://github.com/GerLech/GFX-Tool-Delphi"
 #define MyAppExeName "GFXTool.exe"

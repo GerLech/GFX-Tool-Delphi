@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtDlgs, Vcl.ExtCtrls, vcl.Imaging.pnglang,
-  Vcl.Imaging.jpeg, Vcl.Imaging.pngimage, vcl.NumberBox, System.IOUtils, System.IniFiles,
+  Vcl.Imaging.jpeg, Vcl.Imaging.pngimage, vcl.NumberBox, System.IOUtils, System.IniFiles, System.UITypes,
   Vcl.ComCtrls,pixeledit, System.Types, languageIni;
 
 type
@@ -600,7 +600,7 @@ end;
 
 
 procedure TForm1.clistClick(Sender: TObject);
-var r,g,b,p : integer;
+var p : integer;
     col : TColor;
     Data :String;
 begin
@@ -880,8 +880,7 @@ end;
 procedure TForm1.BtnNewFontClick(Sender: TObject);
  var fptmp : tfontParam;
      bm : tBitmap;
-     bits : array[0..512] of byte;
-     i,l,i1,l2,i2,b1 :  integer;
+     i,l,i1,i2 :  integer;
      c :  AnsiChar;
      b, rtxt : tRect;
      sz : TSize;
@@ -889,7 +888,6 @@ procedure TForm1.BtnNewFontClick(Sender: TObject);
      m : word;
      by : byte;
      gl : Tglyph;
-     eq : boolean;
 
 begin
   if PE.FD.Execute then
@@ -922,12 +920,12 @@ begin
       begin
         c:= AnsiChar(i);
         gl := gls[i];
-        sz := bm.Canvas.TextExtent(c);
-        if (i AND $7F) > 31  then
+        sz := bm.Canvas.TextExtent(String(c));
+        if true  then
         begin
           bm.Canvas.Brush.Color := clWhite;
           bm.Canvas.FillRect(Rect(0,0,50,50));
-          bm.Canvas.TextRect(rtxt,0,0,c);
+          bm.Canvas.TextRect(rtxt,0,0,String(c));
           b := rect(0,0,0,0);
           PE.getBoundingBox(b,bm.Canvas, round(swm.Value));
           gl.w := b.Right-b.Left+1;

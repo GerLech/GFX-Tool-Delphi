@@ -430,7 +430,6 @@ begin
 end;
 
 procedure TPE.LetterChange(Sender: TObject);
-var r : TRect;
 begin
     le.Canvas.Brush.Color := clWhite;
     le.Canvas.Font := FD.Font;
@@ -510,7 +509,7 @@ end;
 
 procedure TPE.nixKeyPress(Sender: TObject; var Key: Char);
 begin
-  if NOT (key in ['0'..'9','a'..'f','A'..'F',Char(VK_LEFT),Char(VK_Right),Char(VK_BACK),Char(VK_DELETE)])
+  if NOT (ansiChar(key) in ['0'..'9','a'..'f','A'..'F',Char(VK_LEFT),Char(VK_Right),Char(VK_BACK),Char(VK_DELETE)])
        then key := #0;
 end;
 
