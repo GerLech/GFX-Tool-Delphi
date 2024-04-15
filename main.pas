@@ -279,7 +279,7 @@ begin
       if mono.Checked then
         res .Lines.Add('const uint8_t PROGMEM '+e_name.Text+' ['+inttostr(((x+7) div 8) * y)+'] = ')
       else if gray.Checked then
-        res.Lines.Add('const uint8_t PROGMEM '+e_name.Text+' ['+inttostr(x * y)+'] = {')
+        res.Lines.Add('const uint8_t PROGMEM '+e_name.Text+' ['+inttostr(x * y)+'] = ')
       else
         res.Lines.Add('const uint16_t PROGMEM '+e_name.Text+' ['+inttostr(x * y)+'] = ');
         convertPart(x,y,0,0,bmp.Canvas,bmp1.Canvas);
@@ -373,7 +373,7 @@ begin
             else m := m shl 1;
           end;
           row := row+'0x'+ inttohex(m) + ',';
-        end
+        end;
       end
       else
       begin
@@ -393,7 +393,7 @@ begin
              row := row+'0x'+ inttohex(rgbw) + ',';
            end;
            cnt := cnt+1;
-           if cnt >128 then
+           if cnt >32 then
            begin
              cnt := 0;
              res.Lines.Add(row);
@@ -401,6 +401,8 @@ begin
            end;
         end;
       end;
+      res.Lines.Add(row);
+      row := '';
     end;
     row:= row+'}';
     res.Lines.Add(row);
